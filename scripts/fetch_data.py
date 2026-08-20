@@ -9,10 +9,31 @@ import json
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from sources import complaints, media_reviews, social_buzz, toyota_news, youtube
+from sources import complaints, media_reviews, motorsports, sentiment, social_buzz, toyota_news, youtube
 
 JST = timezone(timedelta(hours=9))
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "site" / "data" / "latest.json"
+
+
+def _with_sentiment(items: list[dict]) -> list[dict]:
+    return sentiment.attach_sentiment(items)
+
+
+def _motorsports_section() -> dict:
+    series = motorsports.fetch()
+    for s in series.values():
+        s["topics"] = _with_sentiment(s["topics"])
+        s["results"] = _with_sentiment(s["results"])
+        s["standings"] = _with_sentiment(s["standings"])
+    return {
+        "label": "モータースポーツ(TC America・ARA・スーパー耐久)",
+        "series": series,
+        "note": (
+            "各シリーズ公式サイトのリザルト/ランキング表は構造が異なり自動取得が不安定なため、"
+            "ニュース記事ベースでトピックス・レース結果・ランキング話題を集約しています。"
+            "正式な最新順位表は各シリーズの検索リンクからご確認ください。"
+        ),
+    }
 
 
 def build_dashboard() -> dict:
@@ -33,26 +54,27 @@ def build_dashboard() -> dict:
             },
             "youtube_popular": {
                 "label": "YouTube 人気動画",
-                "items": youtube_data["popular"],
+                "items": _with_sentiment(youtube_data["popular"]),
             },
             "youtube_new": {
                 "label": "YouTube 新着動画",
-                "items": youtube_data["new"],
+                "items": _with_sentiment(youtube_data["new"]),
             },
             "social_buzz": {
                 "label": "SNSでの話題(X/Facebook 代替指標)",
-                "items": buzz_data["items"],
+                "items": _with_sentiment(buzz_data["items"]),
                 "note": buzz_data["note"],
             },
             "media_reviews": {
                 "label": "自動車メディア評価記事",
-                "items": media_reviews.fetch(),
+                "items": _with_sentiment(media_reviews.fetch()),
             },
             "complaints": {
                 "label": "お客様の声・クレーム関連情報",
-                "items": complaint_data["items"],
+                "items": _with_sentiment(complaint_data["items"]),
                 "note": complaint_data["note"],
             },
+            "motorsports": _motorsports_section(),
         },
     }
 

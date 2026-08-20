@@ -58,6 +58,7 @@ def _fetch_raw_results(query: str) -> list[dict]:
                         "view_count_text": view_count_text,
                         "view_count": parse_view_count(view_count_text),
                         "recency_seconds": parse_relative_seconds_ago(published_text),
+                        "thumbnail": f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg",
                     }
                 )
     except (KeyError, TypeError):

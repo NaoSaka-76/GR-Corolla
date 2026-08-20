@@ -7,11 +7,28 @@
   --ink: #1b1c20;
   --ink-muted: #63666d;
   --line: #ddd9d1;
+
   --accent: #2954c8;
   --accent-soft: #e7ecfa;
-  --good: #237a4b;
-  --warn: #a8730a;
+
+  --good: #1f7a4c;
+  --good-soft: #e3f4ea;
   --critical: #b7302a;
+  --critical-soft: #fbe7e4;
+  --neutral: #74777f;
+  --neutral-soft: #eceae4;
+  --warn: #a8730a;
+
+  /* モータースポーツ:シリーズ識別カラー(装飾用途、セマンティックカラーとは独立) */
+  --series-tc: #2d6e8e;
+  --series-tc-soft: #e2eff4;
+  --series-ara: #a15a1f;
+  --series-ara-soft: #f6ebdd;
+  --series-taikyu: #0f8f8f;
+  --series-taikyu-soft: #dff4f2;
+
+  --shadow-1: 0 1px 2px rgba(27, 28, 32, 0.05), 0 2px 8px rgba(27, 28, 32, 0.04);
+  --shadow-2: 0 4px 16px rgba(27, 28, 32, 0.08);
 
   --font-display: "Big Shoulders Display", "Noto Sans JP", sans-serif;
   --font-body: "Noto Sans JP", "IBM Plex Sans", "Hiragino Sans", sans-serif;
@@ -19,17 +36,33 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #131419;
-    --surface: #1b1d23;
-    --surface-sunken: #21232a;
+    --bg: #121319;
+    --surface: #1b1d24;
+    --surface-sunken: #22242c;
     --ink: #eceef2;
-    --ink-muted: #999da8;
-    --line: #2b2e36;
-    --accent: #7b98ff;
-    --accent-soft: #202a4a;
-    --good: #4cb884;
-    --warn: #dba13a;
-    --critical: #e2685f;
+    --ink-muted: #9b9fa9;
+    --line: #2c2f38;
+
+    --accent: #85a1ff;
+    --accent-soft: #202a4d;
+
+    --good: #4fbf8b;
+    --good-soft: #163527;
+    --critical: #ef7267;
+    --critical-soft: #3a1f1e;
+    --neutral: #8d919b;
+    --neutral-soft: #262832;
+    --warn: #e2ab52;
+
+    --series-tc: #6fb6d9;
+    --series-tc-soft: #17303c;
+    --series-ara: #d99757;
+    --series-ara-soft: #3a2a18;
+    --series-taikyu: #4fd3d3;
+    --series-taikyu-soft: #123333;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 10px rgba(0, 0, 0, 0.25);
+    --shadow-2: 0 6px 20px rgba(0, 0, 0, 0.35);
   }
 }
 
@@ -43,17 +76,22 @@ html, body {
   font-family: var(--font-body);
 }
 
+img { max-width: 100%; display: block; }
+
+a { color: inherit; }
+
 @media (prefers-reduced-motion: no-preference) {
-  .panel { animation: rise 0.35s ease backwards; }
+  .panel { animation: rise 0.4s ease backwards; }
   .panel:nth-child(1) { animation-delay: 0.02s; }
   .panel:nth-child(2) { animation-delay: 0.06s; }
   .panel:nth-child(3) { animation-delay: 0.10s; }
   .panel:nth-child(4) { animation-delay: 0.14s; }
   .panel:nth-child(5) { animation-delay: 0.18s; }
   .panel:nth-child(6) { animation-delay: 0.22s; }
+  .panel:nth-child(7) { animation-delay: 0.26s; }
 }
 @keyframes rise {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -61,13 +99,20 @@ html, body {
 
 .masthead {
   border-bottom: 1px solid var(--line);
-  background: var(--surface);
+  background:
+    repeating-linear-gradient(
+      -55deg,
+      var(--accent-soft) 0, var(--accent-soft) 2px,
+      transparent 2px, transparent 34px
+    ),
+    var(--surface);
+  background-size: 100% 100%;
 }
 
 .masthead__inner {
-  max-width: 1240px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 28px 24px 22px;
+  padding: 30px 24px 24px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -76,20 +121,24 @@ html, body {
 }
 
 .masthead__eyebrow {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   color: var(--accent);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
+
+.masthead__eyebrow svg { width: 16px; height: 16px; }
 
 .masthead__title h1 {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 900;
-  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
   letter-spacing: -0.01em;
   text-wrap: balance;
 }
@@ -148,12 +197,85 @@ html, body {
   letter-spacing: 0.04em;
 }
 
+/* ---- Stat strip ---- */
+
+.stats {
+  max-width: 1320px;
+  margin: 22px auto 0;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+
+.stat-tile {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow-1);
+  padding: 14px 16px;
+}
+
+.stat-tile__label {
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+
+.stat-tile__value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.7rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stat-tile__value small {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  margin-left: 4px;
+}
+
+.sentiment-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 10px;
+  background: var(--neutral-soft);
+}
+
+.sentiment-bar__seg--positive { background: var(--good); }
+.sentiment-bar__seg--neutral { background: var(--neutral); opacity: 0.5; }
+.sentiment-bar__seg--negative { background: var(--critical); }
+
+.sentiment-legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sentiment-legend span { display: flex; align-items: center; gap: 4px; }
+
+.legend-dot {
+  width: 7px; height: 7px; border-radius: 50%; display: inline-block;
+}
+.legend-dot--positive { background: var(--good); }
+.legend-dot--neutral { background: var(--neutral); }
+.legend-dot--negative { background: var(--critical); }
+
 /* ---- Board / grid ---- */
 
 .board {
-  max-width: 1240px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 28px 24px 64px;
+  padding: 22px 24px 64px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 20px;
@@ -173,26 +295,35 @@ html, body {
   grid-column: span 12;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-@media (min-width: 860px) {
+@media (min-width: 900px) {
   .panel--wide { grid-column: span 7; }
   .panel--narrow { grid-column: span 5; }
   .panel--half { grid-column: span 6; }
+  .panel--full { grid-column: span 12; }
 }
 
 .panel__header {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
   padding: 16px 20px 12px;
   border-bottom: 1px solid var(--line);
 }
+
+.panel__icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.panel__icon svg { width: 100%; height: 100%; }
 
 .panel__title {
   margin: 0;
@@ -200,6 +331,7 @@ html, body {
   font-weight: 700;
   font-size: 1.05rem;
   letter-spacing: -0.005em;
+  flex: 1;
 }
 
 .panel__count {
@@ -225,14 +357,18 @@ html, body {
   list-style: none;
   margin: 0;
   padding: 6px 8px;
-  max-height: 420px;
+  max-height: 460px;
   overflow-y: auto;
 }
 
+/* ---- Item rows (generic, and sentiment-coded) ---- */
+
 .item {
-  display: block;
+  display: flex;
+  gap: 10px;
   padding: 10px 12px;
   border-radius: 7px;
+  border-left: 3px solid transparent;
   text-decoration: none;
   color: inherit;
 }
@@ -247,6 +383,20 @@ html, body {
   outline-offset: -2px;
 }
 
+.item--positive { border-left-color: var(--good); }
+.item--negative { border-left-color: var(--critical); }
+
+.item__thumb {
+  width: 108px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: var(--surface-sunken);
+}
+
+.item__body { flex: 1; min-width: 0; }
+
 .item__title {
   display: block;
   font-size: 0.92rem;
@@ -257,8 +407,9 @@ html, body {
 .item__meta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 4px;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 5px;
   font-size: 0.76rem;
   color: var(--ink-muted);
 }
@@ -275,11 +426,91 @@ html, body {
   white-space: nowrap;
 }
 
+.sentiment-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.sentiment-pill--positive { background: var(--good-soft); color: var(--good); }
+.sentiment-pill--negative { background: var(--critical-soft); color: var(--critical); }
+
 .panel__empty {
   padding: 24px 20px;
   color: var(--ink-muted);
   font-size: 0.88rem;
 }
+
+/* ---- Motorsports panel ---- */
+
+.motorsports {
+  padding: 16px 20px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.series-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+
+.series-card__header {
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #fff;
+}
+
+.series-card--tc_america .series-card__header { background: var(--series-tc); }
+.series-card--ara .series-card__header { background: var(--series-ara); }
+.series-card--super_taikyu .series-card__header { background: var(--series-taikyu); }
+
+.series-card__group {
+  border-top: 1px solid var(--line);
+}
+
+.series-card__group-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  padding: 9px 14px 4px;
+}
+
+.series-card__group .panel__list {
+  padding: 2px 6px 6px;
+  max-height: 220px;
+}
+
+.series-card__link {
+  margin: 4px 14px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 7px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 7px;
+  align-self: flex-start;
+}
+.series-card__link:hover { background: var(--accent-soft); }
 
 /* ---- Footer ---- */
 
@@ -289,7 +520,7 @@ html, body {
 }
 
 .site-footer p {
-  max-width: 1240px;
+  max-width: 1320px;
   margin: 0 auto;
   font-size: 0.78rem;
   line-height: 1.6;
