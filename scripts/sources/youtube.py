@@ -66,7 +66,7 @@ def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]
     return videos
 
 
-def fetch(query: str = "GR Corolla", top_n: int = 8, hl: str = "en", gl: str = "US") -> dict:
+def fetch(query: str = "GR Corolla", top_n: int = 20, hl: str = "en", gl: str = "US") -> dict:
     """人気動画(再生数順)と新着動画(公開日時順)をまとめて返す。"""
     try:
         raw = _fetch_raw_results(query, hl=hl, gl=gl)
