@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import urllib.parse
 
-from .common import dedupe_by_url, fetch_google_news_rss
+from .common import dedupe_by_url, fetch_google_news_rss, sort_by_recency
 from .standings import fetch_tc_america_driver_standings
 
 
@@ -69,7 +69,7 @@ def _fetch_group(query_list: list[tuple], limit: int = 5) -> list[dict]:
     items: list[dict] = []
     for query, hl, gl, ceid in query_list:
         items.extend(fetch_google_news_rss(query, hl=hl, gl=gl, ceid=ceid, limit=limit))
-    return dedupe_by_url(items)
+    return sort_by_recency(dedupe_by_url(items))
 
 
 def fetch() -> dict:

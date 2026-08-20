@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 import urllib.parse
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 
 import feedparser
 import requests
@@ -91,6 +92,24 @@ def dedupe_by_url(items: list[dict]) -> list[dict]:
         seen.add(key)
         out.append(item)
     return out
+
+
+def sort_by_recency(items: list[dict]) -> list[dict]:
+    """"published"(RFC822形式)を新しい順に並べ替える。解析できないものは末尾に回す。"""
+
+    def _key(item: dict) -> datetime:
+        raw = item.get("published", "")
+        if not raw:
+            return datetime.min.replace(tzinfo=timezone.utc)
+        try:
+            dt = parsedate_to_datetime(raw)
+        except (TypeError, ValueError):
+            return datetime.min.replace(tzinfo=timezone.utc)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+
+    return sorted(items, key=_key, reverse=True)
 
 
 _VIEW_MULTIPLIERS = {"k": 1_000, "m": 1_000_000, "b": 1_000_000_000}

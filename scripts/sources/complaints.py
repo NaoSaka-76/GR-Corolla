@@ -7,11 +7,12 @@
 
 from __future__ import annotations
 
-from .common import dedupe_by_url, fetch_google_news_rss
+from .common import dedupe_by_url, fetch_google_news_rss, sort_by_recency
 
 NEWS_QUERIES = [
     ("\"GR Corolla\" recall OR complaint OR problem OR issue OR defect", "en-US", "US", "US:en"),
-    ("GRカローラ 不具合 OR クレーム OR リコール", "ja", "JP", "JP:ja"),
+    ("\"GRMN Corolla\" recall OR complaint OR problem OR issue OR defect", "en-US", "US", "US:en"),
+    ("GRカローラ OR GRMNカローラ 不具合 OR クレーム OR リコール", "ja", "JP", "JP:ja"),
 ]
 
 
@@ -21,7 +22,7 @@ def fetch(limit_per_query: int = 10) -> dict:
         items.extend(fetch_google_news_rss(query, hl=hl, gl=gl, ceid=ceid, limit=limit_per_query))
 
     return {
-        "items": dedupe_by_url(items),
+        "items": sort_by_recency(dedupe_by_url(items)),
         "note": (
             "社内クレーム管理システムとは未連携です。ニュース報道(リコール等)で"
             "公開されている情報のみを集約した簡易モニタリングです。"

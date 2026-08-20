@@ -7,11 +7,12 @@ X API・Facebook Graph APIの公式キーを利用しないため、SNS投稿そ
 
 from __future__ import annotations
 
-from .common import dedupe_by_url, fetch_google_news_rss
+from .common import dedupe_by_url, fetch_google_news_rss, sort_by_recency
 
 NEWS_QUERIES = [
     ("\"GR Corolla\" viral OR trending OR buzz OR social media", "en-US", "US", "US:en"),
-    ("GRカローラ 話題 OR バズ OR SNS", "ja", "JP", "JP:ja"),
+    ("\"GRMN Corolla\" viral OR trending OR buzz OR social media", "en-US", "US", "US:en"),
+    ("GRカローラ OR GRMNカローラ 話題 OR バズ OR SNS", "ja", "JP", "JP:ja"),
 ]
 
 
@@ -21,7 +22,7 @@ def fetch(limit_per_query: int = 8) -> dict:
         items.extend(fetch_google_news_rss(query, hl=hl, gl=gl, ceid=ceid, limit=limit_per_query))
 
     return {
-        "items": dedupe_by_url(items),
+        "items": sort_by_recency(dedupe_by_url(items)),
         "note": (
             "X/Facebookの公式APIキーが未設定のため、投稿本体は取得できません。"
             "ニュース・ブログでの言及数を話題性の代替指標として表示しています。"

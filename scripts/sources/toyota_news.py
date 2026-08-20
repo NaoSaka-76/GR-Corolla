@@ -2,23 +2,27 @@
 
 from __future__ import annotations
 
-from .common import dedupe_by_url, fetch_google_news_rss
+from .common import dedupe_by_url, fetch_google_news_rss, sort_by_recency
 
 QUERIES = [
-    # グローバル/北米
+    # グローバル/北米(GR Corolla)
     ("\"GR Corolla\" Toyota press release OR announcement", "en-US", "US", "US:en"),
     ("\"GR Corolla\" site:pressroom.toyota.com OR site:global.toyota OR site:newsroom.toyota.eu", "en-US", "US", "US:en"),
-    # 日本語(GRカローラ)
+    # グローバル/北米(上位グレードのGRMN Corollaは"GR Corolla"の完全一致に含まれないため別クエリで補足)
+    ("\"GRMN Corolla\" Toyota press release OR announcement", "en-US", "US", "US:en"),
+    ("\"GRMN Corolla\" site:pressroom.toyota.com OR site:global.toyota OR site:newsroom.toyota.eu", "en-US", "US", "US:en"),
+    # 日本語(GRカローラ/GRMNカローラ)
     ("GRカローラ トヨタ 発表 OR 発売 OR 新型", "ja", "JP", "JP:ja"),
+    ("GRMNカローラ トヨタ 発表 OR 発売", "ja", "JP", "JP:ja"),
     # 欧州
-    ("\"GR Corolla\" Toyota Europe", "en-GB", "GB", "GB:en"),
+    ("\"GR Corolla\" OR \"GRMN Corolla\" Toyota Europe", "en-GB", "GB", "GB:en"),
     # オセアニア
-    ("\"GR Corolla\" Toyota Australia", "en-AU", "AU", "AU:en"),
+    ("\"GR Corolla\" OR \"GRMN Corolla\" Toyota Australia", "en-AU", "AU", "AU:en"),
 ]
 
 
-def fetch(limit_per_query: int = 6) -> list[dict]:
+def fetch(limit_per_query: int = 8) -> list[dict]:
     items: list[dict] = []
     for query, hl, gl, ceid in QUERIES:
         items.extend(fetch_google_news_rss(query, hl=hl, gl=gl, ceid=ceid, limit=limit_per_query))
-    return dedupe_by_url(items)
+    return sort_by_recency(dedupe_by_url(items))
