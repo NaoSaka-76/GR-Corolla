@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GR Corolla Watch</title>
+<meta name="description" content="GR Corollaに関する最新リリース・動画・SNS話題・メディア評価・お客様の声を1日3回自動収集するモニタリングダッシュボード" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231b1c20'/%3E%3Cpath d='M6 20 L14 8 L18 8 L11 20 Z' fill='%237b98ff'/%3E%3Cpath d='M14 20 L22 8 L26 8 L19 20 Z' fill='%23b7302a'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <div class="masthead__title">
+      <span class="masthead__eyebrow">TOYOTA GAZOO RACING MONITORING</span>
+      <h1>GR Corolla Watch</h1>
+    </div>
+    <div class="masthead__status">
+      <div class="status-row">
+        <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+        <span id="last-updated">読み込み中…</span>
+      </div>
+      <div class="schedule-chips">
+        <span class="chip">07:00</span>
+        <span class="chip">12:00</span>
+        <span class="chip">17:00</span>
+        <span class="chip-label">JST 自動更新</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="board" id="board">
+  <p class="board__loading" id="loading">データを取得しています…</p>
+</main>
+
+<footer class="site-footer">
+  <p>
+    本ダッシュボードは公開情報源(Googleニュース検索・YouTube検索結果)を自動集計した非公式のモニタリングツールです。
+    トヨタ自動車の公式発表とは異なる場合があります。X/Facebookの投稿本体、および社内クレームシステムのデータは含まれません。
+  </p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
