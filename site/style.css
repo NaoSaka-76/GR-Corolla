@@ -89,6 +89,8 @@ a { color: inherit; }
   .panel:nth-child(5) { animation-delay: 0.18s; }
   .panel:nth-child(6) { animation-delay: 0.22s; }
   .panel:nth-child(7) { animation-delay: 0.26s; }
+  .panel:nth-child(8) { animation-delay: 0.30s; }
+  .panel:nth-child(9) { animation-delay: 0.34s; }
 }
 @keyframes rise {
   from { opacity: 0; transform: translateY(8px); }
@@ -440,6 +442,44 @@ a { color: inherit; }
 .sentiment-pill--positive { background: var(--good-soft); color: var(--good); }
 .sentiment-pill--negative { background: var(--critical-soft); color: var(--critical); }
 
+.sentiment-pill[data-tip] {
+  position: relative;
+  cursor: help;
+}
+
+.sentiment-pill[data-tip]:hover::after,
+.sentiment-pill[data-tip]:focus-visible::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  white-space: normal;
+  width: max-content;
+  max-width: 240px;
+  box-shadow: var(--shadow-2);
+  pointer-events: none;
+}
+
+.sentiment-pill[data-tip]:hover::before,
+.sentiment-pill[data-tip]:focus-visible::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 100%;
+  border: 5px solid transparent;
+  border-bottom-color: var(--ink);
+  z-index: 31;
+}
+
 .panel__empty {
   padding: 24px 20px;
   color: var(--ink-muted);
@@ -472,9 +512,80 @@ a { color: inherit; }
   color: #fff;
 }
 
-.series-card--tc_america .series-card__header { background: var(--series-tc); }
-.series-card--ara .series-card__header { background: var(--series-ara); }
-.series-card--super_taikyu .series-card__header { background: var(--series-taikyu); }
+.series-card--tc_america { --series-color: var(--series-tc); --series-color-soft: var(--series-tc-soft); }
+.series-card--ara { --series-color: var(--series-ara); --series-color-soft: var(--series-ara-soft); }
+.series-card--super_taikyu { --series-color: var(--series-taikyu); --series-color-soft: var(--series-taikyu-soft); }
+
+.series-card__header { background: var(--series-color); }
+
+/* ---- Standings chart (実データによる順位グラフ) ---- */
+
+.standings-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px 14px 10px;
+}
+
+.standings-chart__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.standings-chart__pos {
+  width: 20px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.standings-chart__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.standings-chart__name {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.standings-chart__track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--series-color-soft, var(--surface-sunken));
+  overflow: hidden;
+}
+
+.standings-chart__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--series-color, var(--accent));
+}
+
+.standings-chart__points {
+  width: 34px;
+  flex-shrink: 0;
+  text-align: right;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.series-card__chart-note {
+  margin: 4px 14px 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--surface-sunken);
+}
 
 .series-card__group {
   border-top: 1px solid var(--line);

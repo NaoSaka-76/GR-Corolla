@@ -24,13 +24,15 @@
   };
 
   var LAYOUT = [
-    { key: "toyota_news", size: "wide", icon: "doc" },
+    { key: "toyota_news", size: "full", icon: "doc" },
     { key: "motorsports", size: "full", icon: "flag" },
-    { key: "youtube_popular", size: "narrow", icon: "play" },
-    { key: "youtube_new", size: "narrow", icon: "play" },
-    { key: "media_reviews", size: "wide", icon: "star" },
+    { key: "youtube_popular", size: "half", icon: "play" },
+    { key: "youtube_new", size: "half", icon: "play" },
+    { key: "youtube_popular_jp", size: "half", icon: "play" },
+    { key: "youtube_new_jp", size: "half", icon: "play" },
+    { key: "media_reviews", size: "half", icon: "star" },
     { key: "social_buzz", size: "half", icon: "chat" },
-    { key: "complaints", size: "half", icon: "alert" },
+    { key: "complaints", size: "full", icon: "alert" },
   ];
 
   var SENTIMENT_LABEL_JA = { positive: "ポジティブ", negative: "ネガティブ", neutral: "中立" };
@@ -63,11 +65,22 @@
 
   function sentimentPill(sentiment) {
     if (!sentiment || sentiment.label === "neutral") return null;
-    return el(
+    var pill = el(
       "span",
       "sentiment-pill sentiment-pill--" + sentiment.label,
       sentiment.label === "positive" ? "▲ " + SENTIMENT_LABEL_JA.positive : "▼ " + SENTIMENT_LABEL_JA.negative
     );
+    var reasons = sentiment.reasons || [];
+    if (reasons.length > 0) {
+      var tip =
+        "判定根拠: " +
+        reasons.join(" / ") +
+        (sentiment.label === "positive" ? " という語がポジティブ" : " という語がネガティブ") +
+        "と判定されました";
+      pill.setAttribute("data-tip", tip);
+      pill.tabIndex = 0;
+    }
+    return pill;
   }
 
   function buildItem(item) {
@@ -153,6 +166,38 @@
     return group;
   }
 
+  function buildStandingsChart(rows) {
+    var maxPoints = rows.reduce(function (m, r) { return Math.max(m, r.points); }, 1);
+    var chart = el("div", "standings-chart");
+    rows.forEach(function (row) {
+      var rowEl = el("div", "standings-chart__row");
+      rowEl.appendChild(el("span", "standings-chart__pos", String(row.position)));
+      var main = el("div", "standings-chart__main");
+      main.appendChild(el("span", "standings-chart__name", row.name));
+      var track = el("div", "standings-chart__track");
+      var fill = el("div", "standings-chart__fill");
+      fill.style.width = Math.max(4, (100 * row.points) / maxPoints) + "%";
+      track.appendChild(fill);
+      main.appendChild(track);
+      rowEl.appendChild(main);
+      rowEl.appendChild(el("span", "standings-chart__points", String(row.points)));
+      chart.appendChild(rowEl);
+    });
+    return chart;
+  }
+
+  function buildRankingBlock(s) {
+    var wrap = el("div", "series-card__group");
+    wrap.appendChild(el("div", "series-card__group-title", "シリーズランキング"));
+    if (s.standings_chart && s.standings_chart.length > 0) {
+      wrap.appendChild(buildStandingsChart(s.standings_chart));
+    }
+    if (s.standings_chart_note) {
+      wrap.appendChild(el("p", "panel__note series-card__chart-note", s.standings_chart_note));
+    }
+    return wrap;
+  }
+
   function buildMotorsportsPanel(icon, section) {
     var panel = el("section", "panel panel--full");
     var seriesCount = Object.values(section.series || {}).reduce(function (sum, s) {
@@ -166,9 +211,10 @@
       var s = section.series[key];
       var card = el("div", "series-card series-card--" + key);
       card.appendChild(el("div", "series-card__header", s.label));
+      card.appendChild(buildRankingBlock(s));
       card.appendChild(buildSeriesGroup("トピックス", s.topics));
       card.appendChild(buildSeriesGroup("最新レース結果", s.results));
-      card.appendChild(buildSeriesGroup("シリーズランキング関連", s.standings));
+      card.appendChild(buildSeriesGroup("ランキング関連ニュース", s.standings));
 
       var link = el("a", "series-card__link", "公式ランキングを検索 ↗");
       link.href = s.standings_search_url;
@@ -184,7 +230,15 @@
 
   function collectSentimentItems(data) {
     var all = [];
-    ["youtube_popular", "youtube_new", "social_buzz", "media_reviews", "complaints"].forEach(function (key) {
+    [
+      "youtube_popular",
+      "youtube_new",
+      "youtube_popular_jp",
+      "youtube_new_jp",
+      "social_buzz",
+      "media_reviews",
+      "complaints",
+    ].forEach(function (key) {
       var section = data.sections[key];
       if (section && section.items) all = all.concat(section.items);
     });
@@ -210,9 +264,12 @@
       counts[label] = (counts[label] || 0) + 1;
     });
 
-    var youtubeCount =
-      (data.sections.youtube_popular && data.sections.youtube_popular.items || []).length +
-      (data.sections.youtube_new && data.sections.youtube_new.items || []).length;
+    var youtubeCount = ["youtube_popular", "youtube_new", "youtube_popular_jp", "youtube_new_jp"].reduce(
+      function (sum, key) {
+        return sum + ((data.sections[key] && data.sections[key].items) || []).length;
+      },
+      0
+    );
 
     var motorsportsCount = 0;
     if (data.sections.motorsports && data.sections.motorsports.series) {
@@ -251,7 +308,7 @@
 
     // Tile 3: youtube
     var t3 = el("div", "stat-tile");
-    t3.appendChild(el("div", "stat-tile__label", "YouTube動画(人気+新着)"));
+    t3.appendChild(el("div", "stat-tile__label", "YouTube動画(グローバル+日本語)"));
     var v3 = el("div", "stat-tile__value", String(youtubeCount));
     v3.appendChild(el("small", null, "本"));
     t3.appendChild(v3);

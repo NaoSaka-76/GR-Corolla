@@ -29,9 +29,9 @@ def _motorsports_section() -> dict:
         "label": "モータースポーツ(TC America・ARA・スーパー耐久)",
         "series": series,
         "note": (
-            "各シリーズ公式サイトのリザルト/ランキング表は構造が異なり自動取得が不安定なため、"
-            "ニュース記事ベースでトピックス・レース結果・ランキング話題を集約しています。"
-            "正式な最新順位表は各シリーズの検索リンクからご確認ください。"
+            "トピックス/レース結果はニュース記事ベースで集約しています。TC Americaのみ"
+            "公式サイトの実データからドライバーズランキングをグラフ表示しています"
+            "(ARA・スーパー耐久ST-Qを図示しない理由は各カード内に記載)。"
         ),
     }
 
@@ -40,7 +40,8 @@ def build_dashboard() -> dict:
     now_utc = datetime.now(timezone.utc)
     now_jst = now_utc.astimezone(JST)
 
-    youtube_data = youtube.fetch()
+    youtube_data = youtube.fetch(query="GR Corolla", hl="en", gl="US")
+    youtube_data_jp = youtube.fetch(query="GRカローラ", hl="ja", gl="JP")
     buzz_data = social_buzz.fetch()
     complaint_data = complaints.fetch()
 
@@ -53,12 +54,20 @@ def build_dashboard() -> dict:
                 "items": toyota_news.fetch(),
             },
             "youtube_popular": {
-                "label": "YouTube 人気動画",
+                "label": "YouTube 人気動画(グローバル)",
                 "items": _with_sentiment(youtube_data["popular"]),
             },
             "youtube_new": {
-                "label": "YouTube 新着動画",
+                "label": "YouTube 新着動画(グローバル)",
                 "items": _with_sentiment(youtube_data["new"]),
+            },
+            "youtube_popular_jp": {
+                "label": "YouTube 人気動画(日本語)",
+                "items": _with_sentiment(youtube_data_jp["popular"]),
+            },
+            "youtube_new_jp": {
+                "label": "YouTube 新着動画(日本語)",
+                "items": _with_sentiment(youtube_data_jp["new"]),
             },
             "social_buzz": {
                 "label": "SNSでの話題(X/Facebook 代替指標)",

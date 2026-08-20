@@ -27,31 +27,68 @@ _NEGATIVE_JP = [
 ]
 
 
-def _score_japanese(text: str) -> float:
-    pos = sum(text.count(w) for w in _POSITIVE_JP)
-    neg = sum(text.count(w) for w in _NEGATIVE_JP)
+_MAX_REASONS = 4
+
+
+def _score_japanese(text: str) -> tuple[float, list[str], list[str]]:
+    pos_hits = [w for w in _POSITIVE_JP if w in text]
+    neg_hits = [w for w in _NEGATIVE_JP if w in text]
+    pos = sum(text.count(w) for w in pos_hits)
+    neg = sum(text.count(w) for w in neg_hits)
     if pos == 0 and neg == 0:
-        return 0.0
-    return (pos - neg) / (pos + neg)
+        return 0.0, [], []
+    return (pos - neg) / (pos + neg), pos_hits, neg_hits
+
+
+_WORD_RE = re.compile(r"[A-Za-z']+")
+
+
+def _score_english(text: str) -> tuple[float, list[str], list[str]]:
+    compound = _analyzer.polarity_scores(text)["compound"]
+    pos_hits: list[str] = []
+    neg_hits: list[str] = []
+    for token in _WORD_RE.findall(text):
+        word_score = _analyzer.lexicon.get(token.lower())
+        if word_score is None:
+            continue
+        if word_score > 0:
+            pos_hits.append(token)
+        elif word_score < 0:
+            neg_hits.append(token)
+    return compound, pos_hits, neg_hits
 
 
 def analyze(text: str) -> dict:
-    """{'label': 'positive'|'negative'|'neutral', 'score': -1.0〜1.0} を返す。"""
+    """{'label', 'score', 'reasons'} を返す。reasonsは判定根拠となった単語(最大4件)。"""
     if not text:
-        return {"label": "neutral", "score": 0.0}
+        return {"label": "neutral", "score": 0.0, "reasons": []}
 
     if _JAPANESE_RE.search(text):
-        score = _score_japanese(text)
+        score, pos_hits, neg_hits = _score_japanese(text)
     else:
-        score = _analyzer.polarity_scores(text)["compound"]
+        score, pos_hits, neg_hits = _score_english(text)
 
     if score >= 0.15:
         label = "positive"
+        reasons = pos_hits
     elif score <= -0.15:
         label = "negative"
+        reasons = neg_hits
     else:
         label = "neutral"
-    return {"label": label, "score": round(score, 3)}
+        reasons = []
+
+    # 重複を保ったまま順序を維持し、件数を絞る
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for r in reasons:
+        key = r.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(r)
+
+    return {"label": label, "score": round(score, 3), "reasons": deduped[:_MAX_REASONS]}
 
 
 def attach_sentiment(items: list[dict]) -> list[dict]:

@@ -14,11 +14,11 @@ import requests
 
 from .common import REQUEST_TIMEOUT, USER_AGENT, parse_relative_seconds_ago, parse_view_count
 
-SEARCH_URL = "https://www.youtube.com/results?search_query={query}&hl=en"
+SEARCH_URL = "https://www.youtube.com/results?search_query={query}&hl={hl}&gl={gl}"
 
 
-def _fetch_raw_results(query: str) -> list[dict]:
-    url = SEARCH_URL.format(query=requests.utils.quote(query))
+def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]:
+    url = SEARCH_URL.format(query=requests.utils.quote(query), hl=hl, gl=gl)
     resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT)
     resp.raise_for_status()
 
@@ -66,10 +66,10 @@ def _fetch_raw_results(query: str) -> list[dict]:
     return videos
 
 
-def fetch(query: str = "GR Corolla", top_n: int = 8) -> dict:
+def fetch(query: str = "GR Corolla", top_n: int = 8, hl: str = "en", gl: str = "US") -> dict:
     """人気動画(再生数順)と新着動画(公開日時順)をまとめて返す。"""
     try:
-        raw = _fetch_raw_results(query)
+        raw = _fetch_raw_results(query, hl=hl, gl=gl)
     except Exception as exc:  # noqa: BLE001
         return {
             "popular": [{"title": f"[取得エラー] {exc}", "url": "", "source": "error", "published": ""}],

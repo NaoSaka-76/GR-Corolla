@@ -10,6 +10,7 @@ from __future__ import annotations
 import urllib.parse
 
 from .common import dedupe_by_url, fetch_google_news_rss
+from .standings import fetch_tc_america_driver_standings
 
 
 def _search_link(query: str) -> str:
@@ -80,5 +81,25 @@ def fetch() -> dict:
             "results": _fetch_group(series["queries"]["results"]),
             "standings": _fetch_group(series["queries"]["standings"]),
             "standings_search_url": _search_link(series["standings_search"]),
+            "standings_chart": None,
+            "standings_chart_note": None,
         }
+
+    tc_chart = fetch_tc_america_driver_standings()
+    result["tc_america"]["standings_chart"] = tc_chart["standings"]
+    result["tc_america"]["standings_chart_note"] = (
+        tc_chart["error"]
+        or "TC America「TC」クラス ドライバーズランキング(公式サイト実データ)。"
+        "複数メーカー混走クラスのため車両モデル別の絞り込みはできません。"
+    )
+    result["ara"]["standings_chart_note"] = (
+        "ARA公式サイトに順位表はなく、順位データはJavaScript描画の非公式サイトが提供する"
+        "非公開フォーマットのため、誤表示リスクを避けグラフ化は行っていません。"
+        "「公式ランキングを検索」からご確認ください。"
+    )
+    result["super_taikyu"]["standings_chart_note"] = (
+        "水素エンジンGRカローラが参戦するST-Qクラスは開発車両専用クラスのため、"
+        "シリーズポイントランキングの対象外です(公式サイトの年間ランキングボードに"
+        "ST-Qは掲載されません)。"
+    )
     return result
