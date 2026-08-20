@@ -170,15 +170,29 @@
     var maxPoints = rows.reduce(function (m, r) { return Math.max(m, r.points); }, 1);
     var chart = el("div", "standings-chart");
     rows.forEach(function (row) {
-      var rowEl = el("div", "standings-chart__row");
+      var rowEl = el("div", "standings-chart__row" + (row.is_gr_corolla ? " standings-chart__row--gr" : ""));
       rowEl.appendChild(el("span", "standings-chart__pos", String(row.position)));
+
       var main = el("div", "standings-chart__main");
-      main.appendChild(el("span", "standings-chart__name", row.name));
+      var nameLine = el("div", "standings-chart__name-line");
+      nameLine.appendChild(el("span", "standings-chart__name", row.name));
+      if (row.is_gr_corolla) {
+        nameLine.appendChild(el("span", "gr-tag", "GR COROLLA"));
+      }
+      main.appendChild(nameLine);
+
+      if (row.team || row.car) {
+        main.appendChild(
+          el("span", "standings-chart__sub", [row.team, row.car].filter(Boolean).join(" · "))
+        );
+      }
+
       var track = el("div", "standings-chart__track");
       var fill = el("div", "standings-chart__fill");
       fill.style.width = Math.max(4, (100 * row.points) / maxPoints) + "%";
       track.appendChild(fill);
       main.appendChild(track);
+
       rowEl.appendChild(main);
       rowEl.appendChild(el("span", "standings-chart__points", String(row.points)));
       chart.appendChild(rowEl);

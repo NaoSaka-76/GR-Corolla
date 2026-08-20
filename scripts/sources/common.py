@@ -122,12 +122,34 @@ _RELATIVE_UNITS = {
 }
 
 
+_RELATIVE_UNITS_JP = [
+    ("秒", 1),
+    ("分", 60),
+    ("時間", 3600),
+    ("週間", 604800),
+    ("ヶ月", 2629800),
+    ("か月", 2629800),
+    ("カ月", 2629800),
+    ("日", 86400),
+    ("月", 2629800),
+    ("年", 31557600),
+]
+
+
 def parse_relative_seconds_ago(text: str) -> int:
-    """'3 hours ago' のような相対時刻テキストを秒数に変換する(新しいほど小さい値)。"""
+    """'3 hours ago' や '4時間前' のような相対時刻テキストを秒数に変換する(新しいほど小さい値)。"""
     if not text:
         return 10**12
+
     match = re.search(r"(\d+)\s*(second|minute|hour|day|week|month|year)", text.lower())
-    if not match:
-        return 10**12
-    value, unit = int(match.group(1)), match.group(2)
-    return value * _RELATIVE_UNITS.get(unit, 10**9)
+    if match:
+        value, unit = int(match.group(1)), match.group(2)
+        return value * _RELATIVE_UNITS.get(unit, 10**9)
+
+    # 日本語表記(例: "4時間前", "13日前", "11か月前")。単位は長いものから順に照合する。
+    for unit, seconds in _RELATIVE_UNITS_JP:
+        jp_match = re.search(rf"(\d+)\s*{unit}", text)
+        if jp_match:
+            return int(jp_match.group(1)) * seconds
+
+    return 10**12

@@ -27,6 +27,10 @@
   --series-taikyu: #0f8f8f;
   --series-taikyu-soft: #dff4f2;
 
+  /* GR Corolla参戦ドライバー/チームを強調するスポットライトカラー(セマンティック/シリーズ色とは独立) */
+  --spotlight: #b8860b;
+  --spotlight-soft: #faf1dc;
+
   --shadow-1: 0 1px 2px rgba(27, 28, 32, 0.05), 0 2px 8px rgba(27, 28, 32, 0.04);
   --shadow-2: 0 4px 16px rgba(27, 28, 32, 0.08);
 
@@ -60,6 +64,9 @@
     --series-ara-soft: #3a2a18;
     --series-taikyu: #4fd3d3;
     --series-taikyu-soft: #123333;
+
+    --spotlight: #e0b23c;
+    --spotlight-soft: #3a2f13;
 
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 10px rgba(0, 0, 0, 0.25);
     --shadow-2: 0 6px 20px rgba(0, 0, 0, 0.35);
@@ -531,6 +538,41 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 3px 6px 3px 8px;
+  border-left: 3px solid transparent;
+  border-radius: 5px;
+}
+
+.standings-chart__row--gr {
+  border-left-color: var(--spotlight);
+  background: var(--spotlight-soft);
+}
+
+.standings-chart__name-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.gr-tag {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--spotlight);
+  background: var(--spotlight-soft);
+  border: 1px solid var(--spotlight);
+  border-radius: 999px;
+  padding: 0px 6px;
+  white-space: nowrap;
+}
+
+.standings-chart__sub {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  margin-bottom: 3px;
 }
 
 .standings-chart__pos {

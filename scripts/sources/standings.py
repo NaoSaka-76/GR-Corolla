@@ -22,9 +22,12 @@ import requests
 
 from .common import REQUEST_TIMEOUT, USER_AGENT
 
-STANDINGS_URL = "https://tcamerica.us/standings"
+BASE_URL = "https://tcamerica.us"
+STANDINGS_URL = f"{BASE_URL}/standings"
+RESULTS_URL = f"{BASE_URL}/results"
 TARGET_CLASS_LABEL = "TC America TC Drivers"
 JST = timezone(timedelta(hours=9))
+MAX_TRACKS_FOR_CAR_MAP = 10
 
 
 def _session() -> requests.Session:
@@ -71,11 +74,74 @@ def _parse_standings_table(html_text: str) -> list[dict]:
     return results
 
 
+def _parse_race_classification(html_text: str) -> list[dict]:
+    """個別レースの完全クラシフィケーション表から driver/team/car を抽出する。"""
+    table = re.search(r"<table.*?</table>", html_text, re.S)
+    if not table:
+        return []
+    rows = re.findall(r"<tr[^>]*>(.*?)</tr>", table.group(0), re.S)
+    if not rows:
+        return []
+    header = [re.sub(r"<[^>]+>", "", c).strip().lower() for c in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", rows[0], re.S)]
+    try:
+        driver_idx = header.index("drivers")
+        team_idx = header.index("team")
+        car_idx = header.index("car")
+    except ValueError:
+        return []
+
+    entries: list[dict] = []
+    for row in rows[1:]:
+        cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row, re.S)
+        cells = [re.sub(r"<[^>]+>", "", c).strip() for c in cells]
+        if len(cells) <= max(driver_idx, team_idx, car_idx):
+            continue
+        driver, team, car = cells[driver_idx], cells[team_idx], cells[car_idx]
+        if driver and car:
+            entries.append({"driver": driver, "team": team, "car": car})
+    return entries
+
+
+def fetch_tc_america_car_map() -> dict[str, dict]:
+    """TC Americaの各レース完全結果から driver名 -> {team, car} のマップを組み立てる。
+
+    ドライバーズランキング表そのものにはチーム/車種の列が存在しないため、
+    シーズン中の各レースウィークエンドの完全クラシフィケーション(結果ページ)を
+    巡回して補完する。複数レースに出た場合は、より新しいレースの情報で上書きする。
+    """
+    session = _session()
+    car_map: dict[str, dict] = {}
+    try:
+        index_resp = session.get(RESULTS_URL, timeout=REQUEST_TIMEOUT)
+        index_resp.raise_for_status()
+        track_paths = list(dict.fromkeys(re.findall(r'href="(/results/\d{4}/[a-z0-9-]+)"', index_resp.text)))
+
+        for track_path in track_paths[:MAX_TRACKS_FOR_CAR_MAP]:
+            try:
+                track_resp = session.get(f"{BASE_URL}{track_path}", timeout=REQUEST_TIMEOUT)
+                if not track_resp.ok:
+                    continue
+                race_paths = re.findall(rf'href="({re.escape(track_path)}/race-\d+-tcam)"', track_resp.text)
+                if not race_paths:
+                    continue
+                race_resp = session.get(f"{BASE_URL}{race_paths[0]}", timeout=REQUEST_TIMEOUT)
+                if not race_resp.ok:
+                    continue
+                for entry in _parse_race_classification(race_resp.text):
+                    car_map[entry["driver"]] = {"team": entry["team"], "car": entry["car"]}
+            except requests.RequestException:
+                continue
+    except Exception:  # noqa: BLE001
+        return car_map
+    return car_map
+
+
 def fetch_tc_america_driver_standings(limit: int = 10) -> dict:
     """TC America「TC」クラス ドライバーズランキング(公式サイト実データ)。
 
-    複数メーカーが参加する混走クラスのため、ドライバー単位の車両モデルまでは
-    このテーブルには含まれない(公式サイト側に列が存在しない)。
+    ランキング表自体にはチーム/車種の列がないため、各レースの完全結果ページから
+    補完した driver -> {team, car} マップで各行に "team" / "car" /
+    "is_gr_corolla" を付与する。
     """
     session = _session()
     try:
@@ -95,6 +161,16 @@ def fetch_tc_america_driver_standings(limit: int = 10) -> dict:
         )
         resp.raise_for_status()
         rows = _parse_standings_table(resp.text)[:limit]
+
+        if rows:
+            car_map = fetch_tc_america_car_map()
+            for row in rows:
+                info = car_map.get(row["name"], {})
+                car = info.get("car", "")
+                row["team"] = info.get("team", "")
+                row["car"] = car
+                row["is_gr_corolla"] = "corolla" in car.lower()
+
         return {
             "standings": rows,
             "error": None if rows else "現在、順位データが空です(シーズン開幕前などの可能性があります)",

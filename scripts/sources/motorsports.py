@@ -85,12 +85,15 @@ def fetch() -> dict:
             "standings_chart_note": None,
         }
 
-    tc_chart = fetch_tc_america_driver_standings()
+    # TC America「TC」クラスは20台に満たないため、上限なく全ドライバーを取得し
+    # GR Corolla勢(ドライバー/チーム)が順位に関わらず必ず表示されるようにする。
+    tc_chart = fetch_tc_america_driver_standings(limit=30)
     result["tc_america"]["standings_chart"] = tc_chart["standings"]
     result["tc_america"]["standings_chart_note"] = (
         tc_chart["error"]
         or "TC America「TC」クラス ドライバーズランキング(公式サイト実データ)。"
-        "複数メーカー混走クラスのため車両モデル別の絞り込みはできません。"
+        "各レースの完全結果ページから補完したチーム/使用車種を表示しており、"
+        "Toyota GR Corollaで参戦するドライバー/チームには目印を付けています。"
     )
     result["ara"]["standings_chart_note"] = (
         "ARA公式サイトに順位表はなく、順位データはJavaScript描画の非公式サイトが提供する"
