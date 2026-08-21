@@ -100,6 +100,14 @@ def _fetch_description(video_id: str) -> str:
         data = json.loads(match.group(1))
         desc = (data.get("videoDetails", {}) or {}).get("shortDescription", "") or ""
         desc = re.sub(r"\s+", " ", desc).strip()
+        if not desc and not _DEBUG_LOGGED:
+            _DEBUG_LOGGED = True
+            status = (data.get("playabilityStatus", {}) or {}).get("status")
+            reason = (data.get("playabilityStatus", {}) or {}).get("reason")
+            print(
+                f"[youtube] DEBUG empty desc for {video_id}: top_keys={list(data.keys())} "
+                f"playability_status={status!r} reason={reason!r}"
+            )
         if len(desc) > _DESCRIPTION_MAX_CHARS:
             desc = desc[:_DESCRIPTION_MAX_CHARS].rsplit(" ", 1)[0] + "…"
         return desc
