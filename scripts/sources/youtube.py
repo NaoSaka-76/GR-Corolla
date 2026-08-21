@@ -79,8 +79,12 @@ def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]
     return videos
 
 
+_DEBUG_LOGGED = False
+
+
 def _fetch_description(video_id: str) -> str:
     """動画の概要欄(shortDescription)を取得し、ツールチップ表示用に短く整形する。"""
+    global _DEBUG_LOGGED
     try:
         resp = requests.get(
             WATCH_URL.format(video_id=video_id), headers=_REQUEST_HEADERS, timeout=REQUEST_TIMEOUT
@@ -88,6 +92,10 @@ def _fetch_description(video_id: str) -> str:
         resp.raise_for_status()
         match = re.search(r"var ytInitialPlayerResponse = ({.*?});", resp.text)
         if not match:
+            if not _DEBUG_LOGGED:
+                _DEBUG_LOGGED = True
+                print(f"[youtube] DEBUG watch page for {video_id}: status={resp.status_code} len={len(resp.text)}")
+                print(f"[youtube] DEBUG body head: {resp.text[:500]!r}")
             return ""
         data = json.loads(match.group(1))
         desc = (data.get("videoDetails", {}) or {}).get("shortDescription", "") or ""
@@ -95,7 +103,10 @@ def _fetch_description(video_id: str) -> str:
         if len(desc) > _DESCRIPTION_MAX_CHARS:
             desc = desc[:_DESCRIPTION_MAX_CHARS].rsplit(" ", 1)[0] + "…"
         return desc
-    except Exception:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001
+        if not _DEBUG_LOGGED:
+            _DEBUG_LOGGED = True
+            print(f"[youtube] DEBUG exception for {video_id}: {exc!r}")
         return ""
 
 
