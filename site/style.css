@@ -140,7 +140,7 @@ a { color: inherit; }
 }
 
 .masthead__car {
-  width: 64px;
+  width: 78px;
   height: 28px;
   flex-shrink: 0;
   color: var(--accent);
