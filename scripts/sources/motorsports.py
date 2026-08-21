@@ -10,6 +10,7 @@ from __future__ import annotations
 import urllib.parse
 
 from .common import dedupe_by_url, fetch_google_news_rss, sort_by_recency
+from .schedule import fetch_all as fetch_all_schedules
 from .standings import fetch_tc_america_driver_standings
 
 
@@ -21,7 +22,10 @@ SERIES = {
     "tc_america": {
         "label": "TC America(米国 ツーリングカー選手権)",
         "queries": {
-            "topics": [("\"GR Corolla\" \"TC America\"", "en-US", "US", "US:en")],
+            "topics": [
+                ("\"GR Corolla\" \"TC America\"", "en-US", "US", "US:en"),
+                ("\"GRMN Corolla\" \"TC America\"", "en-US", "US", "US:en"),
+            ],
             "results": [
                 ("\"GR Corolla\" \"TC America\" race result OR finish OR podium OR win", "en-US", "US", "US:en"),
             ],
@@ -36,6 +40,7 @@ SERIES = {
         "queries": {
             "topics": [
                 ("\"GR Corolla\" \"American Rally Association\" OR \"ARA\" rally", "en-US", "US", "US:en"),
+                ("\"GRMN Corolla\" \"American Rally Association\" OR \"ARA\" rally", "en-US", "US", "US:en"),
             ],
             "results": [
                 ("\"GR Corolla\" ARA rally result OR podium OR win OR finish", "en-US", "US", "US:en"),
@@ -50,14 +55,14 @@ SERIES = {
         "label": "スーパー耐久 水素エンジンGRカローラ(日本)",
         "queries": {
             "topics": [
-                ("水素 GRカローラ スーパー耐久", "ja", "JP", "JP:ja"),
-                ("\"GR Corolla\" hydrogen \"Super Taikyu\" OR \"S耐\"", "en-US", "US", "US:en"),
+                ("水素 GRカローラ OR GRMNカローラ スーパー耐久", "ja", "JP", "JP:ja"),
+                ("\"GR Corolla\" OR \"GRMN Corolla\" hydrogen \"Super Taikyu\" OR \"S耐\"", "en-US", "US", "US:en"),
             ],
             "results": [
-                ("スーパー耐久 GRカローラ 水素 決勝 OR レース結果 OR 完走", "ja", "JP", "JP:ja"),
+                ("スーパー耐久 GRカローラ OR GRMNカローラ 水素 決勝 OR レース結果 OR 完走", "ja", "JP", "JP:ja"),
             ],
             "standings": [
-                ("スーパー耐久 シリーズランキング OR ポイントランキング GRカローラ 水素", "ja", "JP", "JP:ja"),
+                ("スーパー耐久 シリーズランキング OR ポイントランキング GRカローラ OR GRMNカローラ 水素", "ja", "JP", "JP:ja"),
             ],
         },
         "standings_search": "スーパー耐久シリーズ ST-Q クラス ランキング 水素カローラ 2026",
@@ -83,6 +88,8 @@ def fetch() -> dict:
             "standings_search_url": _search_link(series["standings_search"]),
             "standings_chart": None,
             "standings_chart_note": None,
+            "schedule": [],
+            "schedule_link": None,
         }
 
     # TC America「TC」クラスは20台に満たないため、上限なく全ドライバーを取得し
@@ -105,4 +112,10 @@ def fetch() -> dict:
         "シリーズポイントランキングの対象外です(公式サイトの年間ランキングボードに"
         "ST-Qは掲載されません)。"
     )
+
+    schedules = fetch_all_schedules()
+    result["tc_america"]["schedule"] = schedules["tc_america"]
+    result["super_taikyu"]["schedule"] = schedules["super_taikyu"]
+    result["ara"]["schedule_link"] = schedules["ara"]["link"]
+
     return result

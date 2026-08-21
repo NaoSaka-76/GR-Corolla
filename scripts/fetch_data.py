@@ -40,8 +40,8 @@ def build_dashboard() -> dict:
     now_utc = datetime.now(timezone.utc)
     now_jst = now_utc.astimezone(JST)
 
-    youtube_data = youtube.fetch(query="GR Corolla", hl="en", gl="US")
-    youtube_data_jp = youtube.fetch(query="GRカローラ", hl="ja", gl="JP")
+    youtube_data = youtube.fetch(queries=["GR Corolla", "GRMN Corolla"], hl="en", gl="US")
+    youtube_data_jp = youtube.fetch(queries=["GRカローラ", "GRMNカローラ"], hl="ja", gl="JP")
     buzz_data = social_buzz.fetch()
     complaint_data = complaints.fetch()
 
@@ -80,7 +80,8 @@ def build_dashboard() -> dict:
             },
             "complaints": {
                 "label": "お客様の声・クレーム関連情報",
-                "items": _with_sentiment(complaint_data["items"]),
+                "items": _with_sentiment(complaint_data["items_latest"]),
+                "items_buzz": _with_sentiment(complaint_data["items_buzz"]),
                 "note": complaint_data["note"],
             },
             "motorsports": _motorsports_section(),

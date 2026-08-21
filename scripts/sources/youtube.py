@@ -15,6 +15,8 @@ import requests
 from .common import REQUEST_TIMEOUT, USER_AGENT, parse_relative_seconds_ago, parse_view_count
 
 SEARCH_URL = "https://www.youtube.com/results?search_query={query}&hl={hl}&gl={gl}"
+WATCH_URL = "https://www.youtube.com/watch?v={video_id}"
+_DESCRIPTION_MAX_CHARS = 280
 
 
 def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]:
@@ -51,8 +53,9 @@ def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]
                     continue
                 videos.append(
                     {
+                        "video_id": video_id,
                         "title": title,
-                        "url": f"https://www.youtube.com/watch?v={video_id}",
+                        "url": WATCH_URL.format(video_id=video_id),
                         "source": channel or "YouTube",
                         "published": published_text,
                         "view_count_text": view_count_text,
@@ -66,20 +69,56 @@ def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]
     return videos
 
 
-def fetch(query: str = "GR Corolla", top_n: int = 20, hl: str = "en", gl: str = "US") -> dict:
-    """人気動画(再生数順)と新着動画(公開日時順)をまとめて返す。"""
+def _fetch_description(video_id: str) -> str:
+    """動画の概要欄(shortDescription)を取得し、ツールチップ表示用に短く整形する。"""
     try:
-        raw = _fetch_raw_results(query, hl=hl, gl=gl)
-    except Exception as exc:  # noqa: BLE001
-        return {
-            "popular": [{"title": f"[取得エラー] {exc}", "url": "", "source": "error", "published": ""}],
-            "new": [],
-        }
+        resp = requests.get(
+            WATCH_URL.format(video_id=video_id), headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT
+        )
+        resp.raise_for_status()
+        match = re.search(r"var ytInitialPlayerResponse = ({.*?});", resp.text)
+        if not match:
+            return ""
+        data = json.loads(match.group(1))
+        desc = (data.get("videoDetails", {}) or {}).get("shortDescription", "") or ""
+        desc = re.sub(r"\s+", " ", desc).strip()
+        if len(desc) > _DESCRIPTION_MAX_CHARS:
+            desc = desc[:_DESCRIPTION_MAX_CHARS].rsplit(" ", 1)[0] + "…"
+        return desc
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def fetch(queries: list[str], top_n: int = 20, hl: str = "en", gl: str = "US") -> dict:
+    """複数クエリ(GR Corolla / GRMN Corollaなど)を合算し、人気動画・新着動画を返す。
+
+    表示対象になる動画についてのみ概要欄を追加取得し、ツールチップ表示用の
+    "description" フィールドとして各動画に付与する。
+    """
+    raw: list[dict] = []
+    seen_ids: set[str] = set()
+    fetch_failed = False
+    for query in queries:
+        try:
+            results = _fetch_raw_results(query, hl=hl, gl=gl)
+        except Exception:  # noqa: BLE001
+            fetch_failed = True
+            continue
+        for v in results:
+            if v["video_id"] in seen_ids:
+                continue
+            seen_ids.add(v["video_id"])
+            raw.append(v)
 
     if not raw:
+        message = (
+            "YouTube検索結果を取得できませんでした(ページ構造の変更の可能性)"
+            if fetch_failed
+            else "該当する動画が見つかりませんでした"
+        )
         fallback = {
-            "title": "YouTube検索結果を取得できませんでした(ページ構造の変更の可能性)",
-            "url": f"https://www.youtube.com/results?search_query={requests.utils.quote(query)}",
+            "title": message,
+            "url": f"https://www.youtube.com/results?search_query={requests.utils.quote(queries[0])}",
             "source": "YouTube",
             "published": "",
         }
@@ -87,4 +126,9 @@ def fetch(query: str = "GR Corolla", top_n: int = 20, hl: str = "en", gl: str = 
 
     popular = sorted(raw, key=lambda v: v["view_count"], reverse=True)[:top_n]
     new = sorted(raw, key=lambda v: v["recency_seconds"])[:top_n]
+
+    to_describe = {v["video_id"]: v for v in (popular + new)}
+    for video_id, v in to_describe.items():
+        v["description"] = _fetch_description(video_id)
+
     return {"popular": popular, "new": new}

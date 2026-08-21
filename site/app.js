@@ -95,11 +95,16 @@
     }
 
     if (item.thumbnail) {
+      var thumbWrap = el("span", "item__thumb-wrap");
+      if (item.description) {
+        thumbWrap.setAttribute("data-tip", item.description);
+      }
       var img = el("img", "item__thumb");
       img.src = item.thumbnail;
       img.alt = "";
       img.loading = "lazy";
-      a.appendChild(img);
+      thumbWrap.appendChild(img);
+      a.appendChild(thumbWrap);
     }
 
     var body = el("div", "item__body");
@@ -155,6 +160,46 @@
     return panel;
   }
 
+  function buildComplaintsPanel(icon, section) {
+    var panel = el("section", "panel panel--full");
+    var latestItems = section.items || [];
+    var buzzItems = section.items_buzz || [];
+    panel.appendChild(buildPanelHeader(icon, section.label, latestItems.length));
+    if (section.note) panel.appendChild(el("p", "panel__note", section.note));
+
+    var tabs = el("div", "tab-group");
+    var tabLatest = el("button", "tab-group__btn is-active", "最新順");
+    var tabBuzz = el("button", "tab-group__btn", "話題順");
+    tabs.appendChild(tabLatest);
+    tabs.appendChild(tabBuzz);
+    panel.appendChild(tabs);
+
+    var listWrap = el("div");
+    function renderList(items) {
+      listWrap.innerHTML = "";
+      if (items.length === 0) {
+        listWrap.appendChild(el("p", "panel__empty", "現在、該当する情報はありません。"));
+      } else {
+        listWrap.appendChild(buildList(items));
+      }
+    }
+    renderList(latestItems);
+    panel.appendChild(listWrap);
+
+    tabLatest.addEventListener("click", function () {
+      tabLatest.classList.add("is-active");
+      tabBuzz.classList.remove("is-active");
+      renderList(latestItems);
+    });
+    tabBuzz.addEventListener("click", function () {
+      tabBuzz.classList.add("is-active");
+      tabLatest.classList.remove("is-active");
+      renderList(buzzItems);
+    });
+
+    return panel;
+  }
+
   function buildSeriesGroup(title, items) {
     var group = el("div", "series-card__group");
     group.appendChild(el("div", "series-card__group-title", title));
@@ -200,6 +245,56 @@
     return chart;
   }
 
+  function buildScheduleBlock(s) {
+    var wrap = el("div", "series-card__group");
+    wrap.appendChild(el("div", "series-card__group-title", "レース日程"));
+
+    if (s.schedule_link) {
+      wrap.appendChild(
+        el(
+          "p",
+          "panel__note series-card__chart-note",
+          "日程データの構造が不安定なため一覧化を見送っています。公式スケジュールは以下のリンクからご確認ください。"
+        )
+      );
+      var link = el("a", "series-card__link", "公式スケジュールを見る ↗");
+      link.href = s.schedule_link;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      wrap.appendChild(link);
+      return wrap;
+    }
+
+    var rounds = s.schedule || [];
+    if (rounds.length === 0) {
+      wrap.appendChild(el("p", "panel__empty", "日程情報を取得できませんでした。"));
+      return wrap;
+    }
+
+    var nextRace = rounds.filter(function (r) { return r.status === "upcoming"; })[0];
+    if (nextRace) {
+      var next = el("div", "schedule-next");
+      next.appendChild(el("span", "schedule-next__label", "次戦"));
+      next.appendChild(el("span", "schedule-next__date", nextRace.date_range));
+      next.appendChild(
+        el("span", "schedule-next__track", [nextRace.round, nextRace.name, nextRace.track].filter(Boolean).join(" · "))
+      );
+      wrap.appendChild(next);
+    }
+
+    var list = el("ul", "schedule-list");
+    rounds.forEach(function (r) {
+      var li = el("li", "schedule-list__item schedule-list__item--" + r.status);
+      li.appendChild(el("span", "schedule-list__dot"));
+      li.appendChild(el("span", "schedule-list__date", r.date_range));
+      li.appendChild(el("span", "schedule-list__label", [r.round, r.name, r.track].filter(Boolean).join(" · ")));
+      list.appendChild(li);
+    });
+    wrap.appendChild(list);
+
+    return wrap;
+  }
+
   function buildRankingBlock(s) {
     var wrap = el("div", "series-card__group");
     wrap.appendChild(el("div", "series-card__group-title", "シリーズランキング"));
@@ -225,6 +320,7 @@
       var s = section.series[key];
       var card = el("div", "series-card series-card--" + key);
       card.appendChild(el("div", "series-card__header", s.label));
+      card.appendChild(buildScheduleBlock(s));
       card.appendChild(buildRankingBlock(s));
       card.appendChild(buildSeriesGroup("トピックス", s.topics));
       card.appendChild(buildSeriesGroup("最新レース結果", s.results));
@@ -344,10 +440,14 @@
     LAYOUT.forEach(function (entry) {
       var section = data.sections && data.sections[entry.key];
       if (!section) return;
-      var panel =
-        entry.key === "motorsports"
-          ? buildMotorsportsPanel(entry.icon, section)
-          : buildGenericPanel(entry.icon, section, entry.size);
+      var panel;
+      if (entry.key === "motorsports") {
+        panel = buildMotorsportsPanel(entry.icon, section);
+      } else if (entry.key === "complaints") {
+        panel = buildComplaintsPanel(entry.icon, section);
+      } else {
+        panel = buildGenericPanel(entry.icon, section, entry.size);
+      }
       board.appendChild(panel);
     });
 
