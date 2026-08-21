@@ -18,10 +18,20 @@ SEARCH_URL = "https://www.youtube.com/results?search_query={query}&hl={hl}&gl={g
 WATCH_URL = "https://www.youtube.com/watch?v={video_id}"
 _DESCRIPTION_MAX_CHARS = 280
 
+# GitHub Actionsのようなデータセンター発IP(EUリージョン扱いされることがある)からアクセスすると、
+# 通常のページの代わりにCookie同意インタースティシャルが返り、ytInitialData/
+# ytInitialPlayerResponseの埋め込みJSONごと欠落することがある。既定で同意済みとする
+# Cookieを送ることでこれを回避する。
+_REQUEST_HEADERS = {
+    "User-Agent": USER_AGENT,
+    "Accept-Language": "en-US,en;q=0.9",
+    "Cookie": "CONSENT=YES+cb.20210328-17-p0.en+FX+000",
+}
+
 
 def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]:
     url = SEARCH_URL.format(query=requests.utils.quote(query), hl=hl, gl=gl)
-    resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT)
+    resp = requests.get(url, headers=_REQUEST_HEADERS, timeout=REQUEST_TIMEOUT)
     resp.raise_for_status()
 
     match = re.search(r"var ytInitialData = ({.*?});</script>", resp.text)
@@ -73,7 +83,7 @@ def _fetch_description(video_id: str) -> str:
     """動画の概要欄(shortDescription)を取得し、ツールチップ表示用に短く整形する。"""
     try:
         resp = requests.get(
-            WATCH_URL.format(video_id=video_id), headers={"User-Agent": USER_AGENT}, timeout=REQUEST_TIMEOUT
+            WATCH_URL.format(video_id=video_id), headers=_REQUEST_HEADERS, timeout=REQUEST_TIMEOUT
         )
         resp.raise_for_status()
         match = re.search(r"var ytInitialPlayerResponse = ({.*?});", resp.text)
@@ -128,7 +138,11 @@ def fetch(queries: list[str], top_n: int = 20, hl: str = "en", gl: str = "US") -
     new = sorted(raw, key=lambda v: v["recency_seconds"])[:top_n]
 
     to_describe = {v["video_id"]: v for v in (popular + new)}
+    described_count = 0
     for video_id, v in to_describe.items():
         v["description"] = _fetch_description(video_id)
+        if v["description"]:
+            described_count += 1
+    print(f"[youtube] description fetched for {described_count}/{len(to_describe)} videos ({queries[0]!r})")
 
     return {"popular": popular, "new": new}
