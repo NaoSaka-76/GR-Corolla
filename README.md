@@ -95,7 +95,6 @@ scripts/
     complaints.py
 site/
   index.html / style.css / app.js   # ダッシュボード本体(静的サイト)
-  assets/gr-corolla-hero.jpg        # ヘッダー用の車両写真(提供いただいた画像をトリミング)
   data/latest.json                  # 自動生成される最新データ(コミット対象外)
 .github/workflows/update-dashboard.yml  # 1日3回の自動更新 + GitHub Pagesデプロイ
 ```

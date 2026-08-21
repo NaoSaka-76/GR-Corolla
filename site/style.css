@@ -139,22 +139,6 @@ a { color: inherit; }
   gap: 14px;
 }
 
-.masthead__car-photo {
-  height: 68px;
-  width: auto;
-  flex-shrink: 0;
-  display: block;
-  object-fit: cover;
-  border-radius: 10px;
-  filter: saturate(1.05) contrast(1.03);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 14%, black 86%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 14%, black 86%, transparent);
-}
-
-@media (max-width: 560px) {
-  .masthead__car-photo { display: none; }
-}
-
 .masthead__eyebrow {
   display: flex;
   align-items: center;
