@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 
 import requests
 
@@ -17,14 +18,15 @@ from .common import REQUEST_TIMEOUT, USER_AGENT, parse_relative_seconds_ago, par
 SEARCH_URL = "https://www.youtube.com/results?search_query={query}&hl={hl}&gl={gl}"
 WATCH_URL = "https://www.youtube.com/watch?v={video_id}"
 _DESCRIPTION_MAX_CHARS = 280
+_MAX_DESCRIPTIONS_PER_SIDE = 10  # 人気/新着それぞれ上位何件まで概要欄を取得するか
+_DESCRIPTION_REQUEST_DELAY = 0.6  # 秒。連続アクセスによるボット判定を避けるための間隔
+_DESCRIPTION_RETRY_DELAY = 2.5  # 429(レート制限)発生時の再試行までの待機秒数
 
-# GitHub Actionsのようなデータセンター発IP(EUリージョン扱いされることがある)からアクセスすると、
-# 通常のページの代わりにCookie同意インタースティシャルが返り、ytInitialData/
-# ytInitialPlayerResponseの埋め込みJSONごと欠落することがある。既定で同意済みとする
-# Cookieを送ることでこれを回避する。
 _REQUEST_HEADERS = {
     "User-Agent": USER_AGENT,
     "Accept-Language": "en-US,en;q=0.9",
+    # GitHub Actions等のデータセンター発IPからのアクセスでCookie同意ページに
+    # リダイレクトされるのを避けるため、同意済みとするCookieを送る。
     "Cookie": "CONSENT=YES+cb.20210328-17-p0.en+FX+000",
 }
 
@@ -79,42 +81,37 @@ def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]
     return videos
 
 
-_DEBUG_LOGGED = False
+def _fetch_description_once(video_id: str) -> tuple[str, int | None]:
+    """概要欄取得を1回試みる。戻り値は (description, http_status)。"""
+    resp = requests.get(WATCH_URL.format(video_id=video_id), headers=_REQUEST_HEADERS, timeout=REQUEST_TIMEOUT)
+    if resp.status_code == 429:
+        return "", 429
+    resp.raise_for_status()
+    match = re.search(r"var ytInitialPlayerResponse = ({.*?});", resp.text)
+    if not match:
+        return "", resp.status_code
+    data = json.loads(match.group(1))
+    desc = (data.get("videoDetails", {}) or {}).get("shortDescription", "") or ""
+    desc = re.sub(r"\s+", " ", desc).strip()
+    if len(desc) > _DESCRIPTION_MAX_CHARS:
+        desc = desc[:_DESCRIPTION_MAX_CHARS].rsplit(" ", 1)[0] + "…"
+    return desc, resp.status_code
 
 
 def _fetch_description(video_id: str) -> str:
-    """動画の概要欄(shortDescription)を取得し、ツールチップ表示用に短く整形する。"""
-    global _DEBUG_LOGGED
+    """動画の概要欄(shortDescription)を取得する。
+
+    YouTube側のレート制限(429)が発生した場合は一度だけ間隔を空けて再試行し、
+    それでも失敗する場合は諦めて空文字を返す(ツールチップが表示されないだけで、
+    ダッシュボード全体の動作には影響しない)。
+    """
     try:
-        resp = requests.get(
-            WATCH_URL.format(video_id=video_id), headers=_REQUEST_HEADERS, timeout=REQUEST_TIMEOUT
-        )
-        resp.raise_for_status()
-        match = re.search(r"var ytInitialPlayerResponse = ({.*?});", resp.text)
-        if not match:
-            if not _DEBUG_LOGGED:
-                _DEBUG_LOGGED = True
-                print(f"[youtube] DEBUG watch page for {video_id}: status={resp.status_code} len={len(resp.text)}")
-                print(f"[youtube] DEBUG body head: {resp.text[:500]!r}")
-            return ""
-        data = json.loads(match.group(1))
-        desc = (data.get("videoDetails", {}) or {}).get("shortDescription", "") or ""
-        desc = re.sub(r"\s+", " ", desc).strip()
-        if not desc and not _DEBUG_LOGGED:
-            _DEBUG_LOGGED = True
-            status = (data.get("playabilityStatus", {}) or {}).get("status")
-            reason = (data.get("playabilityStatus", {}) or {}).get("reason")
-            print(
-                f"[youtube] DEBUG empty desc for {video_id}: top_keys={list(data.keys())} "
-                f"playability_status={status!r} reason={reason!r}"
-            )
-        if len(desc) > _DESCRIPTION_MAX_CHARS:
-            desc = desc[:_DESCRIPTION_MAX_CHARS].rsplit(" ", 1)[0] + "…"
+        desc, status = _fetch_description_once(video_id)
+        if status == 429:
+            time.sleep(_DESCRIPTION_RETRY_DELAY)
+            desc, _status = _fetch_description_once(video_id)
         return desc
-    except Exception as exc:  # noqa: BLE001
-        if not _DEBUG_LOGGED:
-            _DEBUG_LOGGED = True
-            print(f"[youtube] DEBUG exception for {video_id}: {exc!r}")
+    except Exception:  # noqa: BLE001
         return ""
 
 
@@ -156,9 +153,16 @@ def fetch(queries: list[str], top_n: int = 20, hl: str = "en", gl: str = "US") -
     popular = sorted(raw, key=lambda v: v["view_count"], reverse=True)[:top_n]
     new = sorted(raw, key=lambda v: v["recency_seconds"])[:top_n]
 
-    to_describe = {v["video_id"]: v for v in (popular + new)}
+    # 概要欄はYouTube側のボット対策(連続アクセスでの429)にかかりやすいため、
+    # 表示件数の全件ではなく上位のみに絞り、リクエスト間隔も空ける。
+    to_describe = {
+        v["video_id"]: v
+        for v in (popular[:_MAX_DESCRIPTIONS_PER_SIDE] + new[:_MAX_DESCRIPTIONS_PER_SIDE])
+    }
     described_count = 0
-    for video_id, v in to_describe.items():
+    for i, (video_id, v) in enumerate(to_describe.items()):
+        if i > 0:
+            time.sleep(_DESCRIPTION_REQUEST_DELAY)
         v["description"] = _fetch_description(video_id)
         if v["description"]:
             described_count += 1
