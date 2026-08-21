@@ -95,16 +95,11 @@
     }
 
     if (item.thumbnail) {
-      var thumbWrap = el("span", "item__thumb-wrap");
-      if (item.description) {
-        thumbWrap.setAttribute("data-tip", item.description);
-      }
       var img = el("img", "item__thumb");
       img.src = item.thumbnail;
       img.alt = "";
       img.loading = "lazy";
-      thumbWrap.appendChild(img);
-      a.appendChild(thumbWrap);
+      a.appendChild(img);
     }
 
     var body = el("div", "item__body");

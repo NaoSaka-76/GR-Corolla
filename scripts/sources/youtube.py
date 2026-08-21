@@ -3,13 +3,16 @@
 公式YouTube Data APIキーを利用しないため、検索結果ページに埋め込まれた
 `ytInitialData` JSONを正規表現で抽出するベストエフォート実装。
 YouTube側のページ構造変更で失敗する可能性があり、その場合は空リストを返す。
+
+(動画ごとの概要欄プレビューはGitHub Actionsの共有IPからだとGoogle側の
+ボット対策(429)にほぼ確実に引っかかり実用にならないため、実装を見送っている。
+検索結果ページのスクレイピング自体は同じ環境で問題なく動作する。)
 """
 
 from __future__ import annotations
 
 import json
 import re
-import time
 
 import requests
 
@@ -17,10 +20,6 @@ from .common import REQUEST_TIMEOUT, USER_AGENT, parse_relative_seconds_ago, par
 
 SEARCH_URL = "https://www.youtube.com/results?search_query={query}&hl={hl}&gl={gl}"
 WATCH_URL = "https://www.youtube.com/watch?v={video_id}"
-_DESCRIPTION_MAX_CHARS = 280
-_MAX_DESCRIPTIONS_PER_SIDE = 10  # 人気/新着それぞれ上位何件まで概要欄を取得するか
-_DESCRIPTION_REQUEST_DELAY = 0.6  # 秒。連続アクセスによるボット判定を避けるための間隔
-_DESCRIPTION_RETRY_DELAY = 2.5  # 429(レート制限)発生時の再試行までの待機秒数
 
 _REQUEST_HEADERS = {
     "User-Agent": USER_AGENT,
@@ -81,46 +80,8 @@ def _fetch_raw_results(query: str, hl: str = "en", gl: str = "US") -> list[dict]
     return videos
 
 
-def _fetch_description_once(video_id: str) -> tuple[str, int | None]:
-    """概要欄取得を1回試みる。戻り値は (description, http_status)。"""
-    resp = requests.get(WATCH_URL.format(video_id=video_id), headers=_REQUEST_HEADERS, timeout=REQUEST_TIMEOUT)
-    if resp.status_code == 429:
-        return "", 429
-    resp.raise_for_status()
-    match = re.search(r"var ytInitialPlayerResponse = ({.*?});", resp.text)
-    if not match:
-        return "", resp.status_code
-    data = json.loads(match.group(1))
-    desc = (data.get("videoDetails", {}) or {}).get("shortDescription", "") or ""
-    desc = re.sub(r"\s+", " ", desc).strip()
-    if len(desc) > _DESCRIPTION_MAX_CHARS:
-        desc = desc[:_DESCRIPTION_MAX_CHARS].rsplit(" ", 1)[0] + "…"
-    return desc, resp.status_code
-
-
-def _fetch_description(video_id: str) -> str:
-    """動画の概要欄(shortDescription)を取得する。
-
-    YouTube側のレート制限(429)が発生した場合は一度だけ間隔を空けて再試行し、
-    それでも失敗する場合は諦めて空文字を返す(ツールチップが表示されないだけで、
-    ダッシュボード全体の動作には影響しない)。
-    """
-    try:
-        desc, status = _fetch_description_once(video_id)
-        if status == 429:
-            time.sleep(_DESCRIPTION_RETRY_DELAY)
-            desc, _status = _fetch_description_once(video_id)
-        return desc
-    except Exception:  # noqa: BLE001
-        return ""
-
-
 def fetch(queries: list[str], top_n: int = 20, hl: str = "en", gl: str = "US") -> dict:
-    """複数クエリ(GR Corolla / GRMN Corollaなど)を合算し、人気動画・新着動画を返す。
-
-    表示対象になる動画についてのみ概要欄を追加取得し、ツールチップ表示用の
-    "description" フィールドとして各動画に付与する。
-    """
+    """複数クエリ(GR Corolla / GRMN Corollaなど)を合算し、人気動画・新着動画を返す。"""
     raw: list[dict] = []
     seen_ids: set[str] = set()
     fetch_failed = False
@@ -152,20 +113,4 @@ def fetch(queries: list[str], top_n: int = 20, hl: str = "en", gl: str = "US") -
 
     popular = sorted(raw, key=lambda v: v["view_count"], reverse=True)[:top_n]
     new = sorted(raw, key=lambda v: v["recency_seconds"])[:top_n]
-
-    # 概要欄はYouTube側のボット対策(連続アクセスでの429)にかかりやすいため、
-    # 表示件数の全件ではなく上位のみに絞り、リクエスト間隔も空ける。
-    to_describe = {
-        v["video_id"]: v
-        for v in (popular[:_MAX_DESCRIPTIONS_PER_SIDE] + new[:_MAX_DESCRIPTIONS_PER_SIDE])
-    }
-    described_count = 0
-    for i, (video_id, v) in enumerate(to_describe.items()):
-        if i > 0:
-            time.sleep(_DESCRIPTION_REQUEST_DELAY)
-        v["description"] = _fetch_description(video_id)
-        if v["description"]:
-            described_count += 1
-    print(f"[youtube] description fetched for {described_count}/{len(to_describe)} videos ({queries[0]!r})")
-
     return {"popular": popular, "new": new}
