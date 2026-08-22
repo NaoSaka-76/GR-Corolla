@@ -17,6 +17,7 @@ GitHub Pagesは静的サイトのみでサーバー側処理ができないた�
 | --- | --- | --- |
 | トヨタ/販売会社 最新リリース | トヨタ自動車・世界各地の販売会社によるGR Corolla/GRMN Corolla関連発表。新着順 | Google News RSS(日英・複数地域クエリ) |
 | モータースポーツ | TC America(米)・ARA(米ラリー)・スーパー耐久 水素エンジンGRカローラ(日)のトピックス/レース結果/ランキング/年間レース日程。新着順。TC Americaのみ公式サイト実データのドライバーズランキングをグラフ表示し、GR Corollaで参戦するドライバー/チームを目立たせて表示 | Google News RSS + TC America・スーパー耐久 各公式サイト(標準スクレイピング) + 公式サイト検索/スケジュールリンク |
+| 世界各地のイベント情報 | モーターショー・展示会、試乗会、GR Garageのイベント等(GR Corolla/GRMN Corolla)。新着順 | Google News RSS |
 | YouTube 人気動画 / 新着動画(グローバル・日本語) | 「GR Corolla」「GRMN Corolla」(グローバル)と「GRカローラ」「GRMNカローラ」(日本語限定)それぞれ20本ずつ整理(サムネイル付き)。人気(バズっている)動画のみ再生数順、新着動画は投稿日時順 | YouTube検索結果ページのベストエフォート・スクレイピング |
 | SNSでの話題 | X/Facebookの投稿の代替として、ニュース・ブログでの話題言及(GR Corolla/GRMN Corolla)。新着順 | Google News RSS |
 | 自動車メディア評価記事 | Car and Driver, MotorTrend, Autoblog等の評価記事(GR Corolla/GRMN Corolla)。新着順 | Google News RSS |
@@ -99,6 +100,7 @@ scripts/
     motorsports.py       # TC America / ARA / スーパー耐久
     standings.py          # TC America公式サイトの実データランキング取得
     schedule.py           # TC America / スーパー耐久の年間レース日程取得
+    events.py              # 世界各地のGR Corollaイベント情報
     youtube.py
     social_buzz.py
     media_reviews.py

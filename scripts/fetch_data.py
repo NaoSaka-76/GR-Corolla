@@ -9,7 +9,7 @@ import json
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from sources import complaints, media_reviews, motorsports, sentiment, social_buzz, toyota_news, youtube
+from sources import complaints, events, media_reviews, motorsports, sentiment, social_buzz, toyota_news, youtube
 
 JST = timezone(timedelta(hours=9))
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "site" / "data" / "latest.json"
@@ -85,6 +85,14 @@ def build_dashboard() -> dict:
                 "note": complaint_data["note"],
             },
             "motorsports": _motorsports_section(),
+            "events": {
+                "label": "世界各地のイベント情報",
+                "items": _with_sentiment(events.fetch()),
+                "note": (
+                    "モーターショー・展示会、試乗会、GR Garageのイベント等をニュース記事から"
+                    "横断的に集約した簡易カレンダーです。公式のイベント日程一覧ではありません。"
+                ),
+            },
         },
     }
 

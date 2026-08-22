@@ -21,11 +21,16 @@
     flag:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
       '<path d="M5 3v18"/><path d="M5 4h14l-3 3.5 3 3.5H5z"/></svg>',
+    calendar:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+      '<rect x="3.5" y="5" width="17" height="15" rx="2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/>' +
+      '<line x1="8" y1="3" x2="8" y2="6.5"/><line x1="16" y1="3" x2="16" y2="6.5"/></svg>',
   };
 
   var LAYOUT = [
     { key: "toyota_news", size: "full", icon: "doc" },
     { key: "motorsports", size: "full", icon: "flag" },
+    { key: "events", size: "full", icon: "calendar" },
     { key: "youtube_popular", size: "half", icon: "play" },
     { key: "youtube_new", size: "half", icon: "play" },
     { key: "youtube_popular_jp", size: "half", icon: "play" },
@@ -343,6 +348,7 @@
       "social_buzz",
       "media_reviews",
       "complaints",
+      "events",
     ].forEach(function (key) {
       var section = data.sections[key];
       if (section && section.items) all = all.concat(section.items);
