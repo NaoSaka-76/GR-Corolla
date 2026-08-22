@@ -1,10 +1,16 @@
 """GR Corollaが参戦するモータースポーツの年間レース日程を取得する。
 
-TC America(公式カレンダーページ)とスーパー耐久(公式レース一覧ページ)は
-静的HTMLに開催日・サーキット名・大会名が明記されており、比較的安定して取得できる。
-ARAは日程情報が非公式のページビルダー(Wix)で描画され、構造がイベントごとに
-微妙に揺れて誤抽出のリスクが高いため、スクレイピングはせず公式スケジュールページへの
-直接リンクのみを提供する。
+TC America・スーパー耐久・ARAともに公式サイトの静的HTMLから日程を取得する。
+ARAはWix製ページビルダーで描画されHTML構造がイベントごとに微妙に揺れるが、
+各イベントが `<h6 class="font_6...">` ブロック単位(1〜複数ブロックに分割される
+ケースあり)で構成されており、日付パターンを軸にブロックを分類・結合すれば
+概ね安定して抽出できることを確認済み(1件のみ元HTML自体が破損しており抽出不可)。
+
+なお、ARAのシリーズランキング(順位表)は公式サイト自体には一切埋め込まれておらず
+("1st"/"points"等の数値データがページ内に存在しない)、非公式の第三者サイト
+(sneakattackrally.com)がJavaScriptで描画する非公開フォーマットのデータに
+依存しているため、ランキングはスクレイピング対象外とし検索リンクのみ提供する
+(standings.py参照)。
 """
 
 from __future__ import annotations
@@ -20,6 +26,9 @@ from .common import REQUEST_TIMEOUT, USER_AGENT
 TC_AMERICA_CALENDAR_URL = "https://tcamerica.us/calendar"
 SUPER_TAIKYU_INDEX_URL = "https://supertaikyu.com/race/index.html"
 ARA_SCHEDULE_URL = "https://www.americanrallyassociation.org/2026-ara-schedule"
+
+_ARA_DATE_RE = re.compile(r"^[A-Z][a-z]+ \d{1,2}(?:\s*[-–]\s*\d{1,2})?,?\s*\d{4}$")
+_ARA_REGION_RE = re.compile(r"^\(.*\)$")
 
 _MONTH_NUM = {
     "JAN": 1, "FEB": 2, "MAR": 3, "APR": 4, "MAY": 5, "JUN": 6,
@@ -168,6 +177,117 @@ def fetch_super_taikyu_schedule() -> list[dict]:
     return events
 
 
+def fetch_ara_schedule() -> list[dict]:
+    """ARA公式サイトのイベント一覧(Wix製リッチテキストブロック)を取得する。
+
+    各イベントは "<h6 class=\"font_6...\">" ブロックとして描画されるが、
+    編集履歴の都合でブロック分割が一定しない(1ブロックに全情報が収まる
+    イベントもあれば、name/region → 空ブロック(区切り) → date → location と
+    複数ブロックに分かれるイベントもある)。日付パターンの有無でブロックを
+    分類し、直前の未確定イベント(pending)に結合するか新規イベントとして
+    扱うかを判定する。日付が最後まで見つからなかったイベントは(元HTML自体が
+    壊れているケースがあるため)無理に補完せず捨てる。
+    """
+    session = _session()
+    events: list[dict] = []
+    try:
+        resp = session.get(ARA_SCHEDULE_URL, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        html_text = resp.text
+
+        blocks: list[tuple[list[str], str | None]] = []
+        for m in re.finditer(r'<h6 class="font_6[^"]*"[^>]*>(.*?)</h6>', html_text, re.S):
+            content = m.group(1)
+            href_m = re.search(
+                r'href="(https://www\.americanrallyassociation\.org/[a-z0-9-]+)"', content
+            )
+            text = re.sub(r"<br[^>]*>", "\n", content)
+            text = re.sub(r"<[^>]+>", "", text)
+            text = html_module.unescape(text).replace("\xa0", " ")
+            lines = [l.strip() for l in text.split("\n") if l.strip() and l.strip() != "​"]
+            blocks.append((lines, href_m.group(1) if href_m else None))
+
+        pending: dict | None = None
+
+        def flush() -> None:
+            nonlocal pending
+            if pending and pending.get("name") and pending.get("date"):
+                events.append(pending)
+            pending = None
+
+        for lines, href in blocks:
+            if not lines:
+                continue
+            if lines == ["Media"]:
+                # スケジュール本体の終端(以降はフッターのナビゲーションメニュー)
+                flush()
+                break
+
+            date_idx = next((i for i, l in enumerate(lines) if _ARA_DATE_RE.match(l)), None)
+
+            if date_idx is not None:
+                pre = lines[:date_idx]
+                name_parts = [l for l in pre if not _ARA_REGION_RE.match(l)]
+                region_parts = [l.strip("()") for l in pre if _ARA_REGION_RE.match(l)]
+                post = lines[date_idx + 1 :]
+                if pending and "date" not in pending and not pre:
+                    # 直前のname/regionブロックに続く「日付のみ」ブロック
+                    pending["date"] = lines[date_idx]
+                    if post:
+                        pending["location"] = post
+                        flush()
+                else:
+                    flush()
+                    pending = {
+                        "name": " ".join(name_parts),
+                        "region": "/".join(region_parts),
+                        "date": lines[date_idx],
+                        "href": href,
+                    }
+                    if post:
+                        pending["location"] = post
+                        flush()
+            else:
+                has_region = any(_ARA_REGION_RE.match(l) for l in lines)
+                if pending and "date" in pending and "location" not in pending:
+                    pending["location"] = lines
+                    flush()
+                elif pending and "date" not in pending:
+                    if has_region:
+                        pending["region"] = "/".join(
+                            l.strip("()") for l in lines if _ARA_REGION_RE.match(l)
+                        )
+                    else:
+                        pending["name"] = (pending.get("name", "") + " " + " ".join(lines)).strip()
+                else:
+                    flush()
+                    pending = {
+                        "name": " ".join(l for l in lines if not _ARA_REGION_RE.match(l)),
+                        "region": "/".join(l.strip("()") for l in lines if _ARA_REGION_RE.match(l)),
+                        "href": href,
+                    }
+        flush()
+
+        for ev in events:
+            m = re.match(r"([A-Za-z]+) (\d{1,2})(?:\s*[-–]\s*\d{1,2})?,?\s*(\d{4})", ev["date"])
+            if not m:
+                continue
+            month_name, day, year = m.groups()
+            ev["sort_key"] = int(year) * 10000 + _month_num(month_name) * 100 + int(day)
+        events = [ev for ev in events if "sort_key" in ev]
+
+        for ev in events:
+            ev["round"] = ev.pop("region", "")
+            ev["track"] = ", ".join(ev.pop("location", []))
+            ev["date_range"] = ev.pop("date")
+            ev.pop("href", None)
+    except Exception:  # noqa: BLE001
+        return []
+
+    events.sort(key=lambda e: e["sort_key"])
+    return events
+
+
 def _finalize(events: list[dict]) -> list[dict]:
     for e in events:
         e["status"] = _status(e["sort_key"])
@@ -179,5 +299,5 @@ def fetch_all() -> dict:
     return {
         "tc_america": _finalize(fetch_tc_america_schedule()),
         "super_taikyu": _finalize(fetch_super_taikyu_schedule()),
-        "ara": {"link": ARA_SCHEDULE_URL},
+        "ara": _finalize(fetch_ara_schedule()),
     }

@@ -103,9 +103,11 @@ def fetch() -> dict:
         "Toyota GR Corollaで参戦するドライバー/チームには目印を付けています。"
     )
     result["ara"]["standings_chart_note"] = (
-        "ARA公式サイトに順位表はなく、順位データはJavaScript描画の非公式サイトが提供する"
-        "非公開フォーマットのため、誤表示リスクを避けグラフ化は行っていません。"
-        "「公式ランキングを検索」からご確認ください。"
+        "ARA公式サイト(americanrallyassociation.org)自体には順位・ポイントの数値データが"
+        "一切埋め込まれておらず(確認済み)、実データはJavaScript描画の非公式サイトが提供する"
+        "非公開フォーマットに依存しているため、誤表示リスクを避けグラフ化は行っていません。"
+        "「公式ランキングを検索」からご確認ください。レース日程については公式サイトから"
+        "取得できています(下記カレンダー参照)。"
     )
     result["super_taikyu"]["standings_chart_note"] = (
         "水素エンジンGRカローラが参戦するST-Qクラスは開発車両専用クラスのため、"
@@ -116,6 +118,6 @@ def fetch() -> dict:
     schedules = fetch_all_schedules()
     result["tc_america"]["schedule"] = schedules["tc_america"]
     result["super_taikyu"]["schedule"] = schedules["super_taikyu"]
-    result["ara"]["schedule_link"] = schedules["ara"]["link"]
+    result["ara"]["schedule"] = schedules["ara"]
 
     return result
