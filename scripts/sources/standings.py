@@ -3,13 +3,17 @@
 TC America公式サイト(tcamerica.us)はシーズン/クラスをHTMLの<select>から動的に解決でき、
 順位表も静的HTMLテーブルとして提供されているため、実データでのグラフ化が可能。
 
-一方で以下2シリーズは、誤ったランキングを表示するリスクが高いため意図的に対象外としている:
-  - ARA(米国ラリー選手権): 公式サイトに順位表はなく、非公式の第三者サイト
-    (sneakattackrally.com)がJavaScriptで描画するSPA。裏側のJSONは非公開・非文書化の
-    フォーマットで、正しく解釈できる保証がない。
-  - スーパー耐久 ST-Qクラス(水素エンジンGRカローラが参戦): 開発車両専用クラスのため、
-    そもそもポイントによるシリーズランキングの対象になっていない(公式サイトの
-    年間ランキングボードにST-Qは掲載されていない)。
+ARA(米国ラリー選手権)公式サイトには「ポイント付きのフル順位表」はないが、
+championship-standingsページにNational Driver/Co-Driverそれぞれの上位3名(表彰台)を
+写真付きで紹介するセクションが実在し、写真のalt属性にドライバー名が、メーカーロゴ画像に
+所属ブランドが埋め込まれている。これは静的HTMLかつ位置(First/Second/Third)と画像の
+対応が崩れないため、上位3名に限り安全に抽出できる。フルの順位表(全ポイント)は
+非公式の第三者サイト(sneakattackrally.com)がJavaScriptで描画するSPAに依存しており、
+裏側のJSONも非公開・非文書化のフォーマットのため、そちらは引き続き対象外とする。
+
+スーパー耐久 ST-Qクラス(水素エンジンGRカローラが参戦)も対象外: 開発車両専用クラスのため、
+そもそもポイントによるシリーズランキングの対象になっていない(公式サイトの
+年間ランキングボードにST-Qは掲載されていない)。
 """
 
 from __future__ import annotations
@@ -177,3 +181,64 @@ def fetch_tc_america_driver_standings(limit: int = 10) -> dict:
         }
     except Exception as exc:  # noqa: BLE001
         return {"standings": [], "error": f"取得エラー: {exc}"}
+
+
+ARA_STANDINGS_URL = "https://www.americanrallyassociation.org/2026-championship-standings"
+
+
+def _clean_brand(alt_text: str) -> str:
+    text = re.sub(r"[_\s]*logo[_\s]*", "", alt_text, flags=re.IGNORECASE)
+    text = re.sub(r"\(.*?\)", "", text)
+    text = text.replace("_", " ").strip()
+    return text.title() if text else ""
+
+
+def fetch_ara_podium() -> dict:
+    """ARA公式サイトのNational Driver/Co-Driver上位3名(表彰台)を取得する。
+
+    "First"/"Second"/"Third"という見出しの直後に、ドライバー写真(alt=氏名)と
+    メーカーロゴ画像が並ぶ構成が崩れないことを確認済み。ドライバー名はh4要素の
+    位置ではなく写真のalt属性から取る(セクションによりh4の並び方が異なり、
+    位置ベースだと名前を取り違えるリスクがあるため)。
+    """
+    session = _session()
+    try:
+        resp = session.get(ARA_STANDINGS_URL, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        html_text = resp.text
+
+        label_positions: list[tuple[int, str]] = []
+        for m in re.finditer(r'<h6 class="font_6[^"]*"[^>]*>(.*?)</h6>', html_text, re.S):
+            text = re.sub(r"<[^>]+>", "", m.group(1)).strip()
+            if text in ("First", "Second", "Third"):
+                label_positions.append((m.start(), text))
+
+        entries: list[dict] = []
+        for i, (pos, label) in enumerate(label_positions):
+            end = label_positions[i + 1][0] if i + 1 < len(label_positions) else pos + 2000
+            window = html_text[pos:end]
+            alts = re.findall(r'alt="([^"]+?)(?:\.png|\.jpg|\.jpeg)?"', window)
+            name = None
+            brand = None
+            for alt in alts:
+                if "logo" in alt.lower():
+                    if brand is None:
+                        brand = _clean_brand(alt)
+                elif name is None:
+                    name = html_module.unescape(alt.strip())
+            if name:
+                entries.append({"position": label, "name": name, "brand": brand or ""})
+
+        # 最初の3件=National Driver Standings、次の3件=National Co-Driver Standings
+        drivers = entries[:3]
+        codrivers = entries[3:6]
+        for row in drivers:
+            row["is_gr_corolla"] = "toyota" in row["brand"].lower()
+
+        return {
+            "drivers": drivers,
+            "codrivers": codrivers,
+            "error": None if drivers else "上位3名の情報を取得できませんでした",
+        }
+    except Exception as exc:  # noqa: BLE001
+        return {"drivers": [], "codrivers": [], "error": f"取得エラー: {exc}"}

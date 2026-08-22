@@ -11,7 +11,7 @@ import urllib.parse
 
 from .common import dedupe_by_url, fetch_google_news_rss, sort_by_recency
 from .schedule import fetch_all as fetch_all_schedules
-from .standings import fetch_tc_america_driver_standings
+from .standings import fetch_ara_podium, fetch_tc_america_driver_standings
 
 
 def _search_link(query: str) -> str:
@@ -88,6 +88,7 @@ def fetch() -> dict:
             "standings_search_url": _search_link(series["standings_search"]),
             "standings_chart": None,
             "standings_chart_note": None,
+            "podium": None,
             "schedule": [],
             "schedule_link": None,
         }
@@ -102,12 +103,14 @@ def fetch() -> dict:
         "各レースの完全結果ページから補完したチーム/使用車種を表示しており、"
         "Toyota GR Corollaで参戦するドライバー/チームには目印を付けています。"
     )
+    ara_podium = fetch_ara_podium()
+    result["ara"]["podium"] = ara_podium
     result["ara"]["standings_chart_note"] = (
-        "ARA公式サイト(americanrallyassociation.org)自体には順位・ポイントの数値データが"
-        "一切埋め込まれておらず(確認済み)、実データはJavaScript描画の非公式サイトが提供する"
-        "非公開フォーマットに依存しているため、誤表示リスクを避けグラフ化は行っていません。"
-        "「公式ランキングを検索」からご確認ください。レース日程については公式サイトから"
-        "取得できています(下記カレンダー参照)。"
+        ara_podium["error"]
+        or "ARA公式サイトにはポイント付きのフル順位表はなく、実データは非公式サイトの"
+        "JavaScript描画に依存しているため、フル順位表のグラフ化は行っていません。"
+        "公式サイトに掲載されているNational Driver/Co-Driver上位3名(表彰台)のみ"
+        "表示しています。フル順位表は「公式ランキングを検索」からご確認ください。"
     )
     result["super_taikyu"]["standings_chart_note"] = (
         "水素エンジンGRカローラが参戦するST-Qクラスは開発車両専用クラスのため、"

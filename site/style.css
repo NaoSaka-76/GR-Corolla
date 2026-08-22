@@ -662,6 +662,73 @@ a { color: inherit; }
   font-variant-numeric: tabular-nums;
 }
 
+/* ---- Podium (上位3名のみの表彰台表示) ---- */
+
+.podium {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 10px 14px 4px;
+}
+
+.podium__group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.podium__group-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
+}
+
+.podium__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  font-size: 0.82rem;
+}
+
+.podium__row--gr {
+  border-left-color: var(--spotlight);
+  background: var(--spotlight-soft);
+}
+
+.podium__pos {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--series-color-soft, var(--accent-soft));
+  color: var(--series-color, var(--accent));
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.72rem;
+}
+
+.podium__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.podium__brand {
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
 .series-card__chart-note {
   margin: 4px 14px 8px;
   padding: 8px 10px;

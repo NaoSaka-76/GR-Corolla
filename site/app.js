@@ -296,11 +296,40 @@
     return wrap;
   }
 
+  var PODIUM_MEDALS = { First: "1", Second: "2", Third: "3" };
+
+  function buildPodiumGroup(title, rows) {
+    var group = el("div", "podium__group");
+    group.appendChild(el("div", "podium__group-title", title));
+    rows.forEach(function (row) {
+      var line = el("div", "podium__row" + (row.is_gr_corolla ? " podium__row--gr" : ""));
+      line.appendChild(el("span", "podium__pos", PODIUM_MEDALS[row.position] || "?"));
+      line.appendChild(el("span", "podium__name", row.name));
+      if (row.brand) line.appendChild(el("span", "podium__brand", row.brand));
+      if (row.is_gr_corolla) line.appendChild(el("span", "gr-tag", "TOYOTA"));
+      group.appendChild(line);
+    });
+    return group;
+  }
+
+  function buildPodium(podium) {
+    var wrap = el("div", "podium");
+    if (podium.drivers && podium.drivers.length > 0) {
+      wrap.appendChild(buildPodiumGroup("ドライバー", podium.drivers));
+    }
+    if (podium.codrivers && podium.codrivers.length > 0) {
+      wrap.appendChild(buildPodiumGroup("コ・ドライバー", podium.codrivers));
+    }
+    return wrap;
+  }
+
   function buildRankingBlock(s) {
     var wrap = el("div", "series-card__group");
     wrap.appendChild(el("div", "series-card__group-title", "シリーズランキング"));
     if (s.standings_chart && s.standings_chart.length > 0) {
       wrap.appendChild(buildStandingsChart(s.standings_chart));
+    } else if (s.podium && (s.podium.drivers || []).length > 0) {
+      wrap.appendChild(buildPodium(s.podium));
     }
     if (s.standings_chart_note) {
       wrap.appendChild(el("p", "panel__note series-card__chart-note", s.standings_chart_note));
