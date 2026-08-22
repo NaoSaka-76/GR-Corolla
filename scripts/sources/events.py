@@ -1,8 +1,8 @@
-"""世界各地で開催・企画されているGR Corolla関連イベント情報の収集。
+"""世界各地で開催・企画されている、GR Corollaに関する「人が集まる」イベント情報の収集。
 
-オーナーズミーティング/ミートアップと、GR Corolla自体が主役となる試乗会・展示会・
-著名モーターショーへの出展・GR Garageイベントに絞って集約する。「event」のような
-一般的すぎる語だけでの検索は、レース結果や無関係な発表記事まで拾ってしまうため使わない。
+オーナーズミーティング/ミートアップ、GR Corolla自体の試乗会・体験会、著名モーターショーへの
+展示・出展のみに絞って集約する。「event」「unveil」「showcase」のような一般的すぎる語だけの
+検索は、発売告知・スペック発表などのプレスリリース記事まで拾ってしまうため使わない。
 公式のイベントカレンダーではなく、ニュース記事ベースの簡易集約。
 """
 
@@ -20,27 +20,24 @@ QUERIES = [
         "US:en",
     ),
     ("GRカローラ OR GRMNカローラ (オーナーズミーティング OR オーナーミーティング OR オーナー会 OR ミートアップ)", "ja", "JP", "JP:ja"),
-    # GR Corollaの試乗会・展示会・お披露目会
+    # GR Corollaの試乗会・体験会・お披露目会(来場者が参加する実施イベント)
     (
-        "(\"GR Corolla\" OR \"GRMN Corolla\") (\"test drive event\" OR \"on display\" "
-        "OR showcase OR \"ride and drive\")",
+        "(\"GR Corolla\" OR \"GRMN Corolla\") (\"test drive event\" OR \"ride and drive\" "
+        "OR \"meet and greet\")",
         "en-US",
         "US",
         "US:en",
     ),
-    ("GRカローラ OR GRMNカローラ (試乗会 OR 展示会 OR お披露目会 OR 体験会)", "ja", "JP", "JP:ja"),
-    # 著名モーターショーへの出展
+    ("GRカローラ OR GRMNカローラ (試乗会 OR 体験会 OR お披露目会 OR 試乗イベント)", "ja", "JP", "JP:ja"),
+    # 著名モーターショーでの展示・出展(発表記事ではなく会場での展示に限定)
     (
         "(\"GR Corolla\" OR \"GRMN Corolla\") (\"Tokyo Auto Salon\" OR \"SEMA Show\" "
-        "OR \"Goodwood Festival of Speed\")",
+        "OR \"Goodwood Festival of Speed\") (display OR exhibit OR exhibiting)",
         "en-US",
         "US",
         "US:en",
     ),
-    ("GRカローラ OR GRMNカローラ (オートサロン OR モーターショー OR モータショー)", "ja", "JP", "JP:ja"),
-    # GR Garageイベント
-    ("(\"GR Corolla\" OR \"GRMN Corolla\") \"GR Garage\" event", "en-US", "US", "US:en"),
-    ("GRカローラ OR GRMNカローラ \"GRガレージ\" イベント", "ja", "JP", "JP:ja"),
+    ("GRカローラ OR GRMNカローラ (オートサロン OR モーターショー OR モータショー) (出展 OR 展示)", "ja", "JP", "JP:ja"),
 ]
 
 
