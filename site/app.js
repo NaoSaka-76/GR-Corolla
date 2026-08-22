@@ -59,6 +59,7 @@
     var parsed = new Date(raw);
     if (!isNaN(parsed.getTime()) && /\d{4}/.test(raw)) {
       return parsed.toLocaleString("ja-JP", {
+        year: "numeric",
         month: "short",
         day: "numeric",
         hour: "2-digit",

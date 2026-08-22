@@ -6,14 +6,11 @@
 
 Google News RSSは見出し文のみで、記事本文・実際の日程/開催地はリンク先を開かないと
 分からない(Googleの記事リンクはJavaScriptによるリダイレクトが必要でRSS側からは
-本文取得ができない)。そのため、見出しに具体的な日付らしき表記(◯月◯日、開催中 等)が
-含まれる記事を優先的に上位表示し、日程の確認を促す形にしている。
-公式のイベントカレンダーではなく、ニュース記事ベースの簡易集約。
+本文取得ができない)。参加を検討する場合は必ず元記事で日程・開催地を確認すること。
+公式のイベントカレンダーではなく、ニュース記事ベースの簡易集約。新着順で表示する。
 """
 
 from __future__ import annotations
-
-import re
 
 from .common import dedupe_by_url, fetch_google_news_rss, sort_by_recency
 
@@ -47,23 +44,8 @@ QUERIES = [
     ("GRカローラ OR GRMNカローラ (オートサロン OR モーターショー OR モータショー) (出展 OR 展示)", "ja", "JP", "JP:ja"),
 ]
 
-_JP_DATE_RE = re.compile(r"\d{1,2}月\d{1,2}日|\d{4}年\d{1,2}月|開催中|開催決定|募集中|\d{1,2}/\d{1,2}")
-_EN_MONTH = r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?"
-_EN_DATE_RE = re.compile(_EN_MONTH + r"\s*\d{1,2}|\d{1,2}\s*" + _EN_MONTH, re.IGNORECASE)
-
-
-def _has_date_hint(title: str) -> bool:
-    """見出し文に具体的な日付らしき表記が含まれるかを判定する(簡易ヒューリスティック)。"""
-    return bool(_JP_DATE_RE.search(title) or _EN_DATE_RE.search(title))
-
-
 def fetch(limit_per_query: int = 6) -> list[dict]:
     items: list[dict] = []
     for query, hl, gl, ceid in QUERIES:
         items.extend(fetch_google_news_rss(query, hl=hl, gl=gl, ceid=ceid, limit=limit_per_query))
-
-    deduped = sort_by_recency(dedupe_by_url(items))
-    # 日付らしき表記が見出しにある記事を優先(グループ内は新着順を維持)
-    with_date = [it for it in deduped if _has_date_hint(it["title"])]
-    without_date = [it for it in deduped if not _has_date_hint(it["title"])]
-    return with_date + without_date
+    return sort_by_recency(dedupe_by_url(items))
