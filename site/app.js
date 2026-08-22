@@ -450,8 +450,9 @@
 
     var generatedAt = data.generated_at_utc ? new Date(data.generated_at_utc) : null;
     if (generatedAt) {
-      var hoursSince = (Date.now() - generatedAt.getTime()) / 36e5;
-      statusDot.classList.toggle("is-stale", hoursSince > 8);
+      // 30分おき更新なので、90分(3サイクル分)を超えて更新が止まっていたら注意表示にする
+      var minutesSince = (Date.now() - generatedAt.getTime()) / 6e4;
+      statusDot.classList.toggle("is-stale", minutesSince > 90);
     }
   }
 

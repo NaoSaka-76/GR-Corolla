@@ -1,6 +1,6 @@
 """GR Corollaダッシュボード用データを収集し、site/data/latest.jsonへ出力する。
 
-1日3回(7時/12時/17時 JST)、GitHub Actionsから実行される想定。
+30分おきにGitHub Actionsから実行される想定。
 """
 
 from __future__ import annotations

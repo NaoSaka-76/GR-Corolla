@@ -1,7 +1,13 @@
 # GR Corolla Watch
 
 GR Corollaに関する情報を1か所に集約するモニタリングダッシュボード。GitHub Actionsで
-1日3回(JST 07:00 / 12:00 / 17:00)自動的にデータを収集し、GitHub Pagesで公開する。
+30分おきに自動的にデータを収集し、GitHub Pagesで公開する。
+
+GitHub Pagesは静的サイトのみでサーバー側処理ができないため、アクセスの都度リアルタイムに
+取得することはできない(Google News/YouTube/TC America等はCORS制限でブラウザから直接
+取得できず、アクセスごとに実スクレイピングを走らせるとレート制限で機能停止するリスクが
+高い)。そのため「アクセスの都度更新」の実質的な代替として、自動更新の頻度を上げる方式を
+採用している。
 
 **公開ページ:** Settings > Pages で有効化後、`https://<owner>.github.io/GR-Corolla/`
 
@@ -36,6 +42,10 @@ GR Corollaに関する情報を1か所に集約するモニタリングダッシ
 
 ## 既知の制約
 
+- **30分おきはGitHub Actionsのcronによる近似値**: GitHub Actions側の負荷状況により実行が
+  数分遅れることがある(GitHub公式のドキュメントでも明記されている既知の挙動)。また、
+  TC America/スーパー耐久の公式サイトへは1回の実行で十数件のページを取得するため、
+  更新頻度を30分よりさらに上げる場合は先方サイトへの負荷にも配慮すること。
 - **公式API未使用**: YouTube Data API・X API・Facebook Graph API のキーは未設定。すべて
   無料の公開エンドポイント(Google News RSS、YouTube検索ページ)をベストエフォートで
   利用しているため、件数の正確性・網羅性は公式APIに劣る。
@@ -96,7 +106,7 @@ scripts/
 site/
   index.html / style.css / app.js   # ダッシュボード本体(静的サイト)
   data/latest.json                  # 自動生成される最新データ(コミット対象外)
-.github/workflows/update-dashboard.yml  # 1日3回の自動更新 + GitHub Pagesデプロイ
+.github/workflows/update-dashboard.yml  # 30分おきの自動更新 + GitHub Pagesデプロイ
 ```
 
 ## ローカルでの動作確認
