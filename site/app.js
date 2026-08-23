@@ -31,10 +31,7 @@
     { key: "toyota_news", size: "full", icon: "doc" },
     { key: "motorsports", size: "full", icon: "flag" },
     { key: "events", size: "full", icon: "calendar" },
-    { key: "youtube_popular", size: "half", icon: "play" },
-    { key: "youtube_new", size: "half", icon: "play" },
-    { key: "youtube_popular_jp", size: "half", icon: "play" },
-    { key: "youtube_new_jp", size: "half", icon: "play" },
+    { key: "youtube", size: "full", icon: "play" },
     { key: "media_reviews", size: "half", icon: "star" },
     { key: "social_buzz", size: "half", icon: "chat" },
     { key: "complaints", size: "full", icon: "alert" },
@@ -196,6 +193,114 @@
       tabBuzz.classList.add("is-active");
       tabLatest.classList.remove("is-active");
       renderList(buzzItems);
+    });
+
+    return panel;
+  }
+
+  function youtubeItemKey(item) {
+    return item.video_id || item.url || item.title;
+  }
+
+  function mergeDedupItems(listA, listB) {
+    var seen = {};
+    var out = [];
+    listA.concat(listB).forEach(function (item) {
+      var k = youtubeItemKey(item);
+      if (seen[k]) return;
+      seen[k] = true;
+      out.push(item);
+    });
+    return out;
+  }
+
+  function buildYoutubePanel(icon, data) {
+    var sections = data.sections;
+    var globalPopular = (sections.youtube_popular && sections.youtube_popular.items) || [];
+    var globalNew = (sections.youtube_new && sections.youtube_new.items) || [];
+    var jpPopular = (sections.youtube_popular_jp && sections.youtube_popular_jp.items) || [];
+    var jpNew = (sections.youtube_new_jp && sections.youtube_new_jp.items) || [];
+
+    var pools = {
+      global: { popular: globalPopular, new: globalNew },
+      jp: { popular: jpPopular, new: jpNew },
+      all: {
+        popular: mergeDedupItems(globalPopular, jpPopular).sort(function (a, b) {
+          return (b.view_count || 0) - (a.view_count || 0);
+        }),
+        new: mergeDedupItems(globalNew, jpNew).sort(function (a, b) {
+          var aSec = a.recency_seconds === undefined || a.recency_seconds === null ? Infinity : a.recency_seconds;
+          var bSec = b.recency_seconds === undefined || b.recency_seconds === null ? Infinity : b.recency_seconds;
+          return aSec - bSec;
+        }),
+      },
+    };
+
+    var totalCount = mergeDedupItems(mergeDedupItems(globalPopular, globalNew), mergeDedupItems(jpPopular, jpNew)).length;
+
+    var panel = el("section", "panel panel--full");
+    panel.appendChild(buildPanelHeader(icon, "YouTube動画(グローバル・日本語)", totalCount));
+
+    var controls = el("div", "youtube-controls");
+    var regionTabs = el("div", "tab-group");
+    var regionAll = el("button", "tab-group__btn is-active", "すべて");
+    var regionGlobal = el("button", "tab-group__btn", "グローバル");
+    var regionJp = el("button", "tab-group__btn", "日本");
+    [regionAll, regionGlobal, regionJp].forEach(function (b) { regionTabs.appendChild(b); });
+
+    var orderTabs = el("div", "tab-group");
+    var orderNew = el("button", "tab-group__btn is-active", "新着順");
+    var orderPopular = el("button", "tab-group__btn", "話題順");
+    [orderNew, orderPopular].forEach(function (b) { orderTabs.appendChild(b); });
+
+    controls.appendChild(regionTabs);
+    controls.appendChild(orderTabs);
+    panel.appendChild(controls);
+
+    var listWrap = el("div");
+    panel.appendChild(listWrap);
+
+    var state = { region: "all", order: "new" };
+
+    function renderList() {
+      var items = (pools[state.region] && pools[state.region][state.order]) || [];
+      listWrap.innerHTML = "";
+      if (items.length === 0) {
+        listWrap.appendChild(el("p", "panel__empty", "現在、該当する情報はありません。"));
+      } else {
+        listWrap.appendChild(buildList(items));
+      }
+    }
+    renderList();
+
+    function setActive(buttons, activeBtn) {
+      buttons.forEach(function (b) { b.classList.toggle("is-active", b === activeBtn); });
+    }
+
+    regionAll.addEventListener("click", function () {
+      state.region = "all";
+      setActive([regionAll, regionGlobal, regionJp], regionAll);
+      renderList();
+    });
+    regionGlobal.addEventListener("click", function () {
+      state.region = "global";
+      setActive([regionAll, regionGlobal, regionJp], regionGlobal);
+      renderList();
+    });
+    regionJp.addEventListener("click", function () {
+      state.region = "jp";
+      setActive([regionAll, regionGlobal, regionJp], regionJp);
+      renderList();
+    });
+    orderNew.addEventListener("click", function () {
+      state.order = "new";
+      setActive([orderNew, orderPopular], orderNew);
+      renderList();
+    });
+    orderPopular.addEventListener("click", function () {
+      state.order = "popular";
+      setActive([orderNew, orderPopular], orderPopular);
+      renderList();
     });
 
     return panel;
@@ -469,6 +574,17 @@
 
     board.innerHTML = "";
     LAYOUT.forEach(function (entry) {
+      if (entry.key === "youtube") {
+        var hasYoutubeData =
+          data.sections &&
+          (data.sections.youtube_popular ||
+            data.sections.youtube_new ||
+            data.sections.youtube_popular_jp ||
+            data.sections.youtube_new_jp);
+        if (!hasYoutubeData) return;
+        board.appendChild(buildYoutubePanel(entry.icon, data));
+        return;
+      }
       var section = data.sections && data.sections[entry.key];
       if (!section) return;
       var panel;

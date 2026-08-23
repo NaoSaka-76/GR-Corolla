@@ -402,6 +402,15 @@ a { color: inherit; }
   color: #fff;
 }
 
+.youtube-controls {
+  display: flex;
+  flex-direction: column;
+}
+
+.youtube-controls .tab-group + .tab-group {
+  padding-top: 6px;
+}
+
 .panel__list {
   list-style: none;
   margin: 0;
