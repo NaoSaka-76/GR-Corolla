@@ -372,6 +372,75 @@ a { color: inherit; }
   border-bottom: 1px solid var(--line);
 }
 
+.digest-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 20px 18px;
+}
+
+.digest-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-sunken);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.digest-row:hover,
+.digest-row:focus-visible {
+  border-color: var(--accent);
+}
+
+.digest-row--active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.digest-row__label {
+  font-weight: 600;
+}
+
+.digest-row__count {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+.digest-row--active .digest-row__count {
+  color: var(--accent);
+}
+
+.new-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.item--recent {
+  background: var(--accent-soft);
+}
+
+.item--recent:hover,
+.item--recent:focus-visible {
+  background: var(--surface-sunken);
+}
+
 .tab-group {
   display: flex;
   gap: 6px;

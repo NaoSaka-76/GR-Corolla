@@ -25,6 +25,9 @@
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
       '<rect x="3.5" y="5" width="17" height="15" rx="2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/>' +
       '<line x1="8" y1="3" x2="8" y2="6.5"/><line x1="16" y1="3" x2="16" y2="6.5"/></svg>',
+    clock:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+      '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg>',
   };
 
   var LAYOUT = [
@@ -66,6 +69,21 @@
     return raw;
   }
 
+  function isWithin24h(item) {
+    // YouTube動画はrecency_seconds(取得時点からの経過秒数)、ニュース記事は
+    // publishedのRSS日時文字列から判定する。
+    if (typeof item.recency_seconds === "number") {
+      return item.recency_seconds <= 86400;
+    }
+    if (item.published) {
+      var parsed = Date.parse(item.published);
+      if (!isNaN(parsed)) {
+        return Date.now() - parsed <= 86400000;
+      }
+    }
+    return false;
+  }
+
   function sentimentPill(sentiment) {
     if (!sentiment || sentiment.label === "neutral") return null;
     var pill = el(
@@ -88,7 +106,8 @@
 
   function buildItem(item) {
     var sentimentLabel = item.sentiment ? item.sentiment.label : "neutral";
-    var a = el("a", "item item--" + sentimentLabel);
+    var recent = isWithin24h(item);
+    var a = el("a", "item item--" + sentimentLabel + (recent ? " item--recent" : ""));
     a.href = item.url || "#";
     a.target = "_blank";
     a.rel = "noopener noreferrer";
@@ -109,6 +128,7 @@
     body.appendChild(el("span", "item__title", item.title || "(タイトル不明)"));
 
     var meta = el("div", "item__meta");
+    if (recent) meta.appendChild(el("span", "new-badge", "24時間以内"));
     var pill = sentimentPill(item.sentiment);
     if (pill) meta.appendChild(pill);
     if (item.source) meta.appendChild(el("span", null, item.source));
@@ -143,8 +163,9 @@
     return header;
   }
 
-  function buildGenericPanel(icon, section, size) {
+  function buildGenericPanel(icon, section, size, key) {
     var panel = el("section", "panel panel--" + size);
+    panel.id = "section-" + key;
     var items = section.items || [];
     panel.appendChild(buildPanelHeader(icon, section.label, items.length));
 
@@ -160,6 +181,7 @@
 
   function buildComplaintsPanel(icon, section) {
     var panel = el("section", "panel panel--full");
+    panel.id = "section-complaints";
     var latestItems = section.items || [];
     var buzzItems = section.items_buzz || [];
     panel.appendChild(buildPanelHeader(icon, section.label, latestItems.length));
@@ -239,6 +261,7 @@
     var totalCount = mergeDedupItems(mergeDedupItems(globalPopular, globalNew), mergeDedupItems(jpPopular, jpNew)).length;
 
     var panel = el("section", "panel panel--full");
+    panel.id = "section-youtube";
     panel.appendChild(buildPanelHeader(icon, "YouTube動画(グローバル・日本語)", totalCount));
 
     var controls = el("div", "youtube-controls");
@@ -444,6 +467,7 @@
 
   function buildMotorsportsPanel(icon, section) {
     var panel = el("section", "panel panel--full");
+    panel.id = "section-motorsports";
     var seriesCount = Object.values(section.series || {}).reduce(function (sum, s) {
       return sum + s.topics.length + s.results.length + s.standings.length;
     }, 0);
@@ -569,10 +593,75 @@
     statsEl.appendChild(t4);
   }
 
+  function countRecent(items) {
+    return (items || []).filter(isWithin24h).length;
+  }
+
+  function buildDigestPanel(data) {
+    var sections = (data && data.sections) || {};
+    var rows = [];
+
+    if (sections.toyota_news) {
+      rows.push({ key: "toyota_news", label: sections.toyota_news.label, count: countRecent(sections.toyota_news.items) });
+    }
+    if (sections.motorsports && sections.motorsports.series) {
+      var msCount = 0;
+      Object.values(sections.motorsports.series).forEach(function (s) {
+        msCount += countRecent(s.topics) + countRecent(s.results) + countRecent(s.standings);
+      });
+      rows.push({ key: "motorsports", label: sections.motorsports.label, count: msCount });
+    }
+    if (sections.events) {
+      rows.push({ key: "events", label: sections.events.label, count: countRecent(sections.events.items) });
+    }
+    if (sections.youtube_popular || sections.youtube_new || sections.youtube_popular_jp || sections.youtube_new_jp) {
+      var ytAll = mergeDedupItems(
+        mergeDedupItems((sections.youtube_popular && sections.youtube_popular.items) || [], (sections.youtube_new && sections.youtube_new.items) || []),
+        mergeDedupItems((sections.youtube_popular_jp && sections.youtube_popular_jp.items) || [], (sections.youtube_new_jp && sections.youtube_new_jp.items) || [])
+      );
+      rows.push({ key: "youtube", label: "YouTube動画", count: countRecent(ytAll) });
+    }
+    if (sections.media_reviews) {
+      rows.push({ key: "media_reviews", label: sections.media_reviews.label, count: countRecent(sections.media_reviews.items) });
+    }
+    if (sections.social_buzz) {
+      rows.push({ key: "social_buzz", label: sections.social_buzz.label, count: countRecent(sections.social_buzz.items) });
+    }
+    if (sections.complaints) {
+      rows.push({ key: "complaints", label: sections.complaints.label, count: countRecent(sections.complaints.items) });
+    }
+
+    var totalCount = rows.reduce(function (sum, r) { return sum + r.count; }, 0);
+    var panel = el("section", "panel panel--full digest-panel");
+    panel.appendChild(buildPanelHeader("clock", "直近24時間ダイジェスト", totalCount));
+    panel.appendChild(
+      el("p", "panel__note", "各セクションで過去24時間以内に更新された件数です(記事・動画・レース関連ニュース等の合計)。クリックで該当セクションへ移動します。")
+    );
+
+    var list = el("div", "digest-list");
+    rows.forEach(function (r) {
+      var row = el("a", "digest-row" + (r.count > 0 ? " digest-row--active" : ""));
+      row.href = "#section-" + r.key;
+      row.addEventListener("click", function (evt) {
+        var target = document.getElementById("section-" + r.key);
+        if (target) {
+          evt.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+      row.appendChild(el("span", "digest-row__label", r.label));
+      row.appendChild(el("span", "digest-row__count", String(r.count)));
+      list.appendChild(row);
+    });
+    panel.appendChild(list);
+    return panel;
+  }
+
   function render(data) {
     buildStats(data);
 
     board.innerHTML = "";
+    board.appendChild(buildDigestPanel(data));
     LAYOUT.forEach(function (entry) {
       if (entry.key === "youtube") {
         var hasYoutubeData =
@@ -593,7 +682,7 @@
       } else if (entry.key === "complaints") {
         panel = buildComplaintsPanel(entry.icon, section);
       } else {
-        panel = buildGenericPanel(entry.icon, section, entry.size);
+        panel = buildGenericPanel(entry.icon, section, entry.size, entry.key);
       }
       board.appendChild(panel);
     });
