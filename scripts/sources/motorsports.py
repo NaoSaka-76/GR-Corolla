@@ -77,6 +77,7 @@ _GR_COROLLA_PHOTO = {
     "credit": "Gogerr",
     "license": "CC BY-SA 4.0",
     "source_url": "https://commons.wikimedia.org/wiki/File:Toyota_GR_Corolla_2026.jpg",
+    "note": "市販車ベースの参考画像。実際のレース仕様とは外観が異なります",
 }
 
 VEHICLE_INFO = {
@@ -120,6 +121,82 @@ VEHICLE_INFO = {
             "photo": _GR_COROLLA_PHOTO,
             "source_url": "https://www.tcamerica.us/news/715/toyota-gazoo-racing-north-america-unveils-new-gr-corolla-touring-car",
         },
+        "rivals": [
+            {
+                "manufacturer": "BMW",
+                "model": "M2 CS(Cup)",
+                "description": (
+                    "市販コンパクトクーペM2をベースにした、TCクラス唯一の後輪駆動勢。"
+                    "Kaplan Racing SystemsやFast Track Racing等がM2 CS(Cup)で参戦しており、"
+                    "GR Corolla TCが同クラス初の四輪駆動車である点との対比が分かりやすい一台。"
+                ),
+                "specs": [
+                    {"key": "engine", "value": "3.0L 直列6気筒ツインターボ(S58、市販車ベース)"},
+                    {"key": "power", "value": "450PS前後(市販車ベース。レース仕様の調整値は非公開)"},
+                    {"key": "drivetrain", "value": "FR(後輪駆動)"},
+                ],
+                "photo": {
+                    "src": "https://upload.wikimedia.org/wikipedia/commons/4/41/2020_BMW_M2_CS_Auto.jpg",
+                    "credit": "Calreyn88",
+                    "license": "CC BY-SA 4.0",
+                    "source_url": "https://commons.wikimedia.org/wiki/File:2020_BMW_M2_CS_Auto.jpg",
+                    "note": "市販車ベースの参考画像。実際のレース仕様とは外観が異なります",
+                },
+                "source_url": "https://www.bmw-m.com/en/fastlane/motorsport/race-cars/bmw-m2-cs-racing.html",
+            },
+            {
+                "manufacturer": "HYUNDAI",
+                "model": "Elantra N TCR",
+                "description": (
+                    "国際的なTCR規定に準拠したセダン。Ricca AutosportがElantra N1 TC/TC Evoとして"
+                    "参戦している。"
+                ),
+                "specs": [
+                    {"key": "engine", "value": "2.0L 直列4気筒ターボ"},
+                    {"key": "power", "value": "約350PS(450Nm、TCRレース仕様)"},
+                    {"key": "drivetrain", "value": "FF(前輪駆動)"},
+                    {"key": "weight", "value": "最低重量1,265kg(TCR規定)"},
+                    {"key": "transmission", "value": "6速シーケンシャル"},
+                ],
+                "photo": {
+                    "src": "https://upload.wikimedia.org/wikipedia/commons/1/13/2023_Hyundai_Elantra_N_TCR.jpg",
+                    "credit": "Calreyn88",
+                    "license": "CC0 1.0",
+                    "source_url": "https://commons.wikimedia.org/wiki/File:2023_Hyundai_Elantra_N_TCR.jpg",
+                    "note": "レース仕様の実車",
+                },
+                "source_url": "https://en.wikipedia.org/wiki/Hyundai_Elantra_N_TCR",
+            },
+            {
+                "manufacturer": "HONDA",
+                "model": "Civic Type R TCR(FK8)",
+                "description": (
+                    "TCRカー・オブ・ザ・イヤーを複数回受賞したベストセラーTCRマシンで、世界各国の"
+                    "ツーリングカー選手権で豊富な実績を持つ。"
+                ),
+                "specs": [
+                    {"key": "engine", "value": "2.0L 直列4気筒ターボ(K20C1)"},
+                    {"key": "power", "value": "約340PS(TCRレース仕様)"},
+                    {"key": "drivetrain", "value": "FF(前輪駆動)"},
+                    {"key": "weight", "value": "最低重量1,265kg(TCR規定)"},
+                    {"key": "transmission", "value": "Xtrac製6速シーケンシャル"},
+                ],
+                "photo": {
+                    "src": (
+                        "https://upload.wikimedia.org/wikipedia/commons/c/cb/"
+                        "2019_British_Touring_Car_Championship%2C_Brands_Hatch_%2847936467042%29.jpg"
+                    ),
+                    "credit": "Matt Buck",
+                    "license": "CC BY-SA 2.0",
+                    "source_url": (
+                        "https://commons.wikimedia.org/wiki/File:2019_British_Touring_Car_Championship,"
+                        "_Brands_Hatch_(47936467042).jpg"
+                    ),
+                    "note": "レース仕様の実車(2019年 英国ツーリングカー選手権)",
+                },
+                "source_url": "https://en.wikipedia.org/wiki/Honda_Civic_Type_R_TCR",
+            },
+        ],
     },
     "ara": {
         "regulation": {
@@ -160,6 +237,86 @@ VEHICLE_INFO = {
             "photo": _GR_COROLLA_PHOTO,
             "source_url": "https://tgr-wrt.com/gr-corolla-rally-car-to-compete-on-american-soil-in-2026/",
         },
+        "rivals": [
+            {
+                "manufacturer": "ŠKODA",
+                "model": "Fabia RS Rally2",
+                "description": (
+                    "WRC2で20以上のタイトルを獲得してきたRally2界の代表的モデル。2022年ARA RC2"
+                    "チャンピオンのTom Williamsが2026年シーズンもFabia RS Rally2で参戦している。"
+                ),
+                "specs": [
+                    {"key": "engine", "value": "1.6L 直列4気筒ターボ(リストリクター径32mm、Rally2規定)"},
+                    {"key": "power", "value": "約280〜290PS"},
+                    {"key": "drivetrain", "value": "4WD"},
+                    {"key": "weight", "value": "最低重量1,230kg(Rally2規定)"},
+                    {"key": "transmission", "value": "5〜6速シーケンシャル"},
+                ],
+                "photo": {
+                    "src": (
+                        "https://upload.wikimedia.org/wikipedia/commons/1/1f/"
+                        "2024_Bohemia_Rally_Mlad%C3%A1_Boleslav_-_Kopeck%C3%BD.jpg"
+                    ),
+                    "credit": "Miloslav Rejha",
+                    "license": "CC BY 4.0",
+                    "source_url": (
+                        "https://commons.wikimedia.org/wiki/File:2024_Bohemia_Rally_"
+                        "Mlad%C3%A1_Boleslav_-_Kopeck%C3%BD.jpg"
+                    ),
+                    "note": "レース仕様の実車(2024年 Bohemia Rally)",
+                },
+                "source_url": "https://en.wikipedia.org/wiki/%C5%A0koda_Fabia_RS_Rally2",
+            },
+            {
+                "manufacturer": "FORD",
+                "model": "Fiesta Rally2",
+                "description": "M-Sportが開発するRally2カー。ARAではJavier OlivaresやCameron Steely等が参戦している。",
+                "specs": [
+                    {"key": "engine", "value": "1.6L 直列4気筒ターボ(リストリクター径32mm、Rally2規定)"},
+                    {"key": "power", "value": "約280〜290PS"},
+                    {"key": "drivetrain", "value": "4WD"},
+                    {"key": "weight", "value": "最低重量1,230kg(Rally2規定)"},
+                    {"key": "transmission", "value": "5〜6速シーケンシャル"},
+                ],
+                "photo": {
+                    "src": "https://upload.wikimedia.org/wikipedia/commons/7/70/2022_Rally_Poland_-_Ken_Torn.jpg",
+                    "credit": "Makary",
+                    "license": "CC BY-SA 4.0",
+                    "source_url": "https://commons.wikimedia.org/wiki/File:2022_Rally_Poland_-_Ken_Torn.jpg",
+                    "note": "レース仕様の実車(2022年 Rally Poland)",
+                },
+                "source_url": "https://en.wikipedia.org/wiki/Ford_Fiesta_Rally2",
+            },
+            {
+                "manufacturer": "HYUNDAI",
+                "model": "i20 N Rally2",
+                "description": (
+                    "Hyundai Customer Racingが供給するRally2カー。ARAではPatrick Gruszka/"
+                    "Alastair Scully、Lia Block等が最新仕様のi20 N Rally2で参戦している。"
+                ),
+                "specs": [
+                    {"key": "engine", "value": "1.6L 直列4気筒ターボ(リストリクター径32mm、Rally2規定)"},
+                    {"key": "power", "value": "約280〜290PS"},
+                    {"key": "drivetrain", "value": "4WD"},
+                    {"key": "weight", "value": "最低重量1,230kg(Rally2規定)"},
+                    {"key": "transmission", "value": "5〜6速シーケンシャル"},
+                ],
+                "photo": {
+                    "src": (
+                        "https://upload.wikimedia.org/wikipedia/commons/b/b7/"
+                        "Hyundai_i20_N_Rally2_at_the_2025_Shannons_Adelaide_Rally_%28028A4600%29.jpg"
+                    ),
+                    "credit": "Yu Chu Chin",
+                    "license": "CC BY 4.0",
+                    "source_url": (
+                        "https://commons.wikimedia.org/wiki/File:Hyundai_i20_N_Rally2_at_the_2025_"
+                        "Shannons_Adelaide_Rally_(028A4600).jpg"
+                    ),
+                    "note": "レース仕様の実車(2025年 Shannons Adelaide Rally)",
+                },
+                "source_url": "https://en.wikipedia.org/wiki/Hyundai_i20_N_Rally2",
+            },
+        ],
     },
 }
 

@@ -367,7 +367,10 @@
 
       var main = el("div", "standings-chart__main");
       var nameLine = el("div", "standings-chart__name-line");
-      nameLine.appendChild(el("span", "standings-chart__name", row.name));
+      var nameEl = el("span", "standings-chart__name", row.name);
+      // 表示幅の都合で省略記号(...)表示になった場合でも、hoverで全文を確認できるようにする。
+      if (row.name) nameEl.title = row.name;
+      nameLine.appendChild(nameEl);
       if (row.is_gr_corolla) {
         nameLine.appendChild(el("span", "gr-tag", "GR COROLLA"));
       }
@@ -450,7 +453,9 @@
     rows.forEach(function (row) {
       var line = el("div", "podium__row" + (row.is_gr_corolla ? " podium__row--gr" : ""));
       line.appendChild(el("span", "podium__pos", PODIUM_MEDALS[row.position] || "?"));
-      line.appendChild(el("span", "podium__name", row.name));
+      var nameEl = el("span", "podium__name", row.name);
+      if (row.name) nameEl.title = row.name;
+      line.appendChild(nameEl);
       if (row.brand) line.appendChild(el("span", "podium__brand", row.brand));
       if (row.is_gr_corolla) line.appendChild(el("span", "gr-tag", "TOYOTA"));
       group.appendChild(line);
@@ -505,11 +510,8 @@
     return wrap;
   }
 
-  function buildVehicleBlock(v) {
-    var wrap = el("div", "series-card__group");
-    wrap.appendChild(el("div", "series-card__group-title", "参戦車両: " + v.manufacturer + " " + v.model));
-
-    var card = el("div", "vehicle-card");
+  function buildVehicleCard(v, featured) {
+    var card = el("div", "vehicle-card" + (featured ? " vehicle-card--gr" : ""));
     if (v.photo && v.photo.src) {
       var figure = el("div", "vehicle-card__photo");
       var img = el("img");
@@ -521,6 +523,10 @@
     }
 
     var body = el("div", "vehicle-card__body");
+    var titleLine = el("div", "vehicle-card__title-line");
+    titleLine.appendChild(el("h4", "vehicle-card__title", v.manufacturer + " " + v.model));
+    if (featured) titleLine.appendChild(el("span", "gr-tag", "GR COROLLA"));
+    body.appendChild(titleLine);
     if (v.description) body.appendChild(el("p", "vehicle-card__desc", v.description));
     if (v.team) body.appendChild(el("p", "vehicle-card__meta", "開発/運用: " + v.team));
     if (v.debut) body.appendChild(el("p", "vehicle-card__meta", "参戦開始: " + v.debut));
@@ -535,7 +541,7 @@
     }
 
     if (v.source_url) {
-      var link = el("a", "series-card__link", "公式発表ページで実車写真を見る ↗");
+      var link = el("a", "series-card__link", "出典/公式ページを見る ↗");
       link.href = v.source_url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
@@ -544,7 +550,7 @@
 
     if (v.photo && v.photo.src) {
       var credit = el("p", "vehicle-card__credit");
-      credit.appendChild(document.createTextNode("写真(市販車ベースの参考画像。実際のレース仕様とは外観が異なります): "));
+      credit.appendChild(document.createTextNode("写真" + (v.photo.note ? "(" + v.photo.note + ")" : "") + ": "));
       var creditLink = el("a", null, v.photo.credit + " (" + v.photo.license + ")");
       creditLink.href = v.photo.source_url;
       creditLink.target = "_blank";
@@ -555,7 +561,19 @@
     }
 
     card.appendChild(body);
-    wrap.appendChild(card);
+    return card;
+  }
+
+  function buildVehicleSection(vehicleInfo) {
+    var wrap = el("div", "series-card__group");
+    wrap.appendChild(el("div", "series-card__group-title", "参戦車両"));
+    wrap.appendChild(buildVehicleCard(vehicleInfo.vehicle, true));
+    if (vehicleInfo.rivals && vehicleInfo.rivals.length > 0) {
+      wrap.appendChild(el("div", "vehicle-card__rivals-label", "主なライバル車"));
+      vehicleInfo.rivals.forEach(function (rival) {
+        wrap.appendChild(buildVehicleCard(rival, false));
+      });
+    }
     return wrap;
   }
 
@@ -580,7 +598,7 @@
       addToggleSection(toggleBar, card, "ランキング", buildRankingBlock(s));
       if (s.vehicle_info) {
         addToggleSection(toggleBar, card, "車両規定", buildRegulationBlock(s.vehicle_info.regulation));
-        addToggleSection(toggleBar, card, "参戦車両", buildVehicleBlock(s.vehicle_info.vehicle));
+        addToggleSection(toggleBar, card, "参戦車両", buildVehicleSection(s.vehicle_info));
       }
 
       card.appendChild(buildSeriesGroup("トピックス", s.topics));

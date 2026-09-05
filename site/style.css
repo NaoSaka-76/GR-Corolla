@@ -914,15 +914,15 @@ a { color: inherit; }
   letter-spacing: 0.02em;
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink-muted);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
   cursor: pointer;
 }
 
 .series-card__toggle-btn:hover {
-  border-color: var(--accent);
-  color: var(--ink);
+  background: var(--accent);
+  color: #fff;
 }
 
 .series-card__toggle-btn.is-active {
@@ -944,6 +944,39 @@ a { color: inherit; }
   flex-wrap: wrap;
   gap: 12px;
   padding: 8px 14px 14px;
+}
+
+.vehicle-card + .vehicle-card {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.vehicle-card--gr {
+  background: var(--spotlight-soft);
+}
+
+.vehicle-card__rivals-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  padding: 8px 14px 0;
+}
+
+.vehicle-card__title-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.vehicle-card__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .vehicle-card__photo {
