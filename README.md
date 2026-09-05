@@ -22,6 +22,7 @@ GitHub Pagesは静的サイトのみでサーバー側処理ができないた�
 | SNSでの話題 | X/Facebookの投稿の代替として、ニュース・ブログでの話題言及(GR Corolla/GRMN Corolla)。新着順 | Google News RSS |
 | 自動車メディア評価記事 | Car and Driver, MotorTrend, Autoblog等の評価記事(GR Corolla/GRMN Corolla)。新着順 | Google News RSS |
 | お客様の声・クレーム関連情報 | リコール・不具合報道など公開情報(GR Corolla/GRMN Corolla)。「最新順」「話題順」をタブで切り替え表示 | Google News RSS |
+| ニュルブルクリンク ラップタイムランキング | ニュルブルクリンク・ノルドシュライフェでの公道走行可能な市販車(限定生産モデル含む)のラップタイムを速い順にまとめた参考リスト(現状40台)。各行から概要・主要スペック・オンボード動画・出典を展開表示可能。GR Corolla自体は現状ランクインしていないが、該当時にハイライト表示する仕組みを用意 | 手動収集の静的リファレンス(`site/data/nurburgring.json`、30分毎の自動収集対象外、不定期更新) |
 
 「人気(バズっている)動画」以外の全セクションは公開日時の新しい順に並び替えている
 (YouTubeの人気/新着動画のみ、性質上それぞれ再生数順/投稿日時順を維持)。
@@ -120,6 +121,7 @@ scripts/
 site/
   index.html / style.css / app.js   # ダッシュボード本体(静的サイト)
   data/latest.json                  # 自動生成される最新データ(コミット対象外)
+  data/nurburgring.json             # ニュルブルクリンクラップタイムの手動更新データ(コミット対象)
 .github/workflows/update-dashboard.yml  # 30分おきの自動更新 + GitHub Pagesデプロイ
 ```
 

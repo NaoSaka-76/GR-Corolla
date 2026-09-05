@@ -1,0 +1,1646 @@
+{
+  "updated": "2026-08-23",
+  "note": "ニュルブルクリンク・ノルドシュライフェ(20.6〜20.832km、計測区間はメーカー・年により異なる)で公式にタイム計測された、公道走行可能な市販車(限定生産モデル含む)のラップタイムを速い順にまとめた手動更新の参考リストです。レース専用車・プロトタイプ・ワンメイクレーサーは対象外。計測区間の違い(20.6km版と20.832km版で通常4.4〜4.6秒程度の差)、年式・タイヤ・空力/軽量化オプションの違いにより単純比較はできない点にご注意ください。GT3/GT4RS/GT2RS/Taycanなど複数車種で「標準」と「Mantheyキット」の記録が混在しているため、車名表記で区別しています。",
+  "cars": [
+    {
+      "rank": 1,
+      "manufacturer": "MERCEDES-AMG",
+      "model": "AMG ONE",
+      "lap_time": "6:29.090",
+      "year": 2024,
+      "note": "世界限定275台。F1由来のハイブリッドパワートレインを積む公道走行可能な最速市販車で、市販車として初めて6分30秒の壁を破った。2024年9月23日、Maro Engel選手のドライブでニュルブルクリンク公式記録として樹立(公証人立ち会い)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "1.6L V6ターボ+F1由来ハイブリッド(電動モーター4基)"
+        },
+        {
+          "key": "power",
+          "value": "システム合計1,063PS(1,049馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "非公表(F1由来ハイブリッドのため単一数値は未公表)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,695kg(乾燥重量、3,737lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速オートメイテッドマニュアル(リア)+電動モーター(フロント、AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "285/35ZR19 ミシュラン パイロット・スポーツ Cup 2 R(AMG ONE専用開発MO1)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "335/30ZR20 ミシュラン パイロット・スポーツ Cup 2 R(AMG ONE専用開発MO1)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=yx80Q-CVcvA",
+      "source_url": "https://media.mbusa.com/releases/release-9ce9755cd9dcbb00611364b99f035b12-629090-min-mercedes-amg-one-breaks-its-own-lap-record-on-the-nurburgring-nordschleife"
+    },
+    {
+      "rank": 2,
+      "manufacturer": "PORSCHE",
+      "model": "911 GT2 RS(991.2、Mantheyキット装着)",
+      "lap_time": "6:38.835",
+      "year": 2021,
+      "note": "ポルシェ公認のチューニングパッケージ「Mantheyキット」を装着。エンジンは無改造で、空力・サスペンションのみ強化。2021年6月14日、Lars Kern選手のドライブで公証人立ち会いのもと記録樹立(20.6km区間、20.832kmのフルラップでは6:43.300)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.8L 水平対向6気筒ツインターボ(無改造)"
+        },
+        {
+          "key": "power",
+          "value": "700PS(690馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "750Nm(553lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,470kg(3,241lbs、Weissachパッケージ)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "265/35ZR20 ミシュラン パイロット・スポーツ Cup 2 R(記録走行時装着)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "325/30ZR21 ミシュラン パイロット・スポーツ Cup 2 R(記録走行時装着)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=zcER39YHVxI",
+      "source_url": "https://newsroom.porsche.com/en/2021/products/porsche-911-gt2-rs-manthey-performance-kit-lap-record-nuerburgring-nordschleife-24884.html"
+    },
+    {
+      "rank": 3,
+      "manufacturer": "MERCEDES-AMG",
+      "model": "AMG GT Black Series",
+      "lap_time": "6:43.616",
+      "year": 2020,
+      "note": "無改造の量産状態で記録樹立。2020年11月4日、気温7℃・路面湿潤という悪条件下でMaro Engel選手がドライブ。当時のアヴェンタドールSVJの記録を1.36秒更新した。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L フラットプレーンクランクV8ツインターボ"
+        },
+        {
+          "key": "power",
+          "value": "730PS(720馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "800Nm(590lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,665kg(3,671lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速AMG SPEEDSHIFT DCT(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "285/35ZR19 ミシュラン パイロット・スポーツ Cup 2 R(専用開発MO1A、標準装着)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "335/30ZR20 ミシュラン パイロット・スポーツ Cup 2 R(専用開発MO1A、標準装着)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=9--oZuqtlFY",
+      "source_url": "https://media.mbusa.com/releases/release-34b22cdf3837beba024634fab1052abc-mercedes-amg-gt-black-series-is-fastest-production-car-on-the-nurburgring-nordschleife"
+    },
+    {
+      "rank": 4,
+      "manufacturer": "PORSCHE",
+      "model": "911 GT3 RS(992、標準/Weissachパッケージ)",
+      "lap_time": "6:44.848",
+      "year": 2022,
+      "note": "重要な訂正:この記録はMantheyキット装着車ではなく、無改造の標準GT3 RS(Weissachパッケージ)によるもの(20.6km区間タイム。20.832kmのフルラップでは6:49.328)。2022年10月、Jörg Bergmeister選手が樹立。なお、後年(2025年4月)にMantheyキット装着の992.1型GT3 RSが別途6:45.389(20.832kmフルラップ)を記録している。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒"
+        },
+        {
+          "key": "power",
+          "value": "525PS(518馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "464Nm(342lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,450kg(3,197lbs、Weissachパッケージ)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/35ZR20 ミシュラン パイロット・スポーツ Cup 2 R"
+        },
+        {
+          "key": "tire_rear",
+          "value": "335/30ZR21 ミシュラン パイロット・スポーツ Cup 2 R"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=GqVRqARkh8g",
+      "source_url": "https://newsroom.porsche.com/en/2022/products/porsche-911-gt3-rs-dream-lap-nuerburgring-nordschleife-30028.html"
+    },
+    {
+      "rank": 5,
+      "manufacturer": "LAMBORGHINI",
+      "model": "アヴェンタドール SVJ",
+      "lap_time": "6:44.97",
+      "year": 2018,
+      "note": "世界限定900台。2018年、Marco Mapelli選手のドライブで記録樹立。当時のポルシェ911 GT2 RSの記録を上回った。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "6.5L 自然吸気V12"
+        },
+        {
+          "key": "power",
+          "value": "770馬力(566kW)"
+        },
+        {
+          "key": "torque",
+          "value": "720Nm(531lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,525kg(3,362lbs、乾燥重量)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速ISR自動シングルクラッチ(AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "255/30ZR20 ピレリ P ZERO Corsa(標準装着、Trofeo Rはオプション)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "355/25ZR21 ピレリ P ZERO Corsa(標準装着、Trofeo Rはオプション)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=QRsq35Et-EY",
+      "source_url": "https://www.lamborghini.com/en-en/news/aventador-svj-sets-nurburgring-lap-record-ahead-its-unveiling"
+    },
+    {
+      "rank": 6,
+      "manufacturer": "PORSCHE",
+      "model": "911 GT2 RS(991.2、標準)",
+      "lap_time": "6:47.25",
+      "year": 2017,
+      "note": "2017年9月20日、Lars Kern選手が量産車として当時のノルドシュライフェ最速記録を樹立(Weissachパッケージ装着)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.8L 水平対向6気筒ツインターボ"
+        },
+        {
+          "key": "power",
+          "value": "700PS(690馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "750Nm(553lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,470kg(3,241lbs、Weissachパッケージ)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "265/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "325/30ZR21 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.motorauthority.com/news/1109135_lamborghini-huracn-performante-destroys-porsche-918s-nrburgring-record"
+    },
+    {
+      "rank": 7,
+      "manufacturer": "CHEVROLET",
+      "model": "コルベット ZR1X",
+      "lap_time": "6:49.275",
+      "year": 2025,
+      "note": "1,250馬力。ハイブリッドAWDで、米国メーカー製市販車としてニュルブルクリンク史上最速。2025年6月、Drew Cattell(GM車両ダイナミクスエンジニア)がドライブ。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "5.5L ツインターボV8(LT7)+フロントeモーター(AWDハイブリッド)"
+        },
+        {
+          "key": "power",
+          "value": "1,250馬力(V8 1,064馬力+モーター186馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "973lb-ft(1,319Nm)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,877kg(4,139lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速デュアルクラッチ(後輪)+eモーター(前輪、AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/30ZR20 ミシュラン パイロット・スポーツ Cup 2 R(ZTKパフォーマンスパッケージ、記録走行時装着)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "345/25ZR21 ミシュラン パイロット・スポーツ Cup 2 R(ZTKパフォーマンスパッケージ、記録走行時装着)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=ic7qpuJtHK4",
+      "source_url": "https://news.gm.com/home.detail.html/Pages/news/us/en/2025/jul/0731-Corvette-ZR1X.html"
+    },
+    {
+      "rank": 8,
+      "manufacturer": "CHEVROLET",
+      "model": "コルベット ZR1",
+      "lap_time": "6:50.763",
+      "year": 2025,
+      "note": "1,064馬力。ZR1車両ダイナミクスエンジニアBrian Wallaceがドライブ。コルベット史上最強の非ハイブリッドモデル。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "5.5L ツインターボフラットプレーンV8(LT7)"
+        },
+        {
+          "key": "power",
+          "value": "1,064馬力"
+        },
+        {
+          "key": "torque",
+          "value": "828lb-ft(1,122Nm)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,768kg(3,899lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速デュアルクラッチ(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/30ZR20 ミシュラン パイロット・スポーツ Cup 2 R(ZTKパフォーマンスパッケージ、記録走行時装着)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "345/25ZR21 ミシュラン パイロット・スポーツ Cup 2 R(ZTKパフォーマンスパッケージ、記録走行時装着)"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://news.gm.com/home.detail.html/Pages/news/us/en/2025/jul/0731-Corvette-ZR1X-ZR1.html"
+    },
+    {
+      "rank": 9,
+      "manufacturer": "PORSCHE",
+      "model": "911 GT3(992.2、Mantheyキット装着)",
+      "lap_time": "6:50.863",
+      "year": 2026,
+      "note": "2026年型フェイスリフト後の992.2型GT3にMantheyキットを装着。DTMチャンピオンのAyhancan Güven選手がドライブし、旧型992.1のMantheyキット記録(6:55.737)から約5秒、無改造の標準GT3から5.431秒短縮。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒(無改造)"
+        },
+        {
+          "key": "power",
+          "value": "510PS(502馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "437Nm(322lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,435kg(3,164lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "255/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "315/30ZR21 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=ln8CVztDsgg",
+      "source_url": "https://www.autoguide.com/auto/manufacturers/porsche/manthey-kit-helps-2026-porsche-911-gt3-beat-its-own-ring-time-44632531"
+    },
+    {
+      "rank": 10,
+      "manufacturer": "LAMBORGHINI",
+      "model": "ウラカン ペルフォルマンテ",
+      "lap_time": "6:52.01",
+      "year": 2017,
+      "note": "アクティブエアロシステム「ALA」を初搭載。2016年10月5日、Marco Mapelli選手のドライブで記録樹立、当時のポルシェ918スパイダーの記録を破った。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "5.2L 自然吸気V10"
+        },
+        {
+          "key": "power",
+          "value": "640馬力"
+        },
+        {
+          "key": "torque",
+          "value": "600Nm(442lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,382kg(3,047lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速デュアルクラッチ(AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "245/30ZR20 ピレリ P ZERO Trofeo R(専用開発、記録走行時装着)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "305/30ZR20 ピレリ P ZERO Trofeo R(専用開発、記録走行時装着)"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.motorauthority.com/news/1109135_lamborghini-huracn-performante-destroys-porsche-918s-nrburgring-record"
+    },
+    {
+      "rank": 11,
+      "manufacturer": "PORSCHE",
+      "model": "911 GT3(992、標準)",
+      "lap_time": "6:55.294",
+      "year": 2022,
+      "note": "無改造の標準GT3(20.6km区間タイム。20.832kmのフルラップでは6:59.927)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒"
+        },
+        {
+          "key": "power",
+          "value": "510PS(502馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "437Nm(322lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,487kg(3,278lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT/7速PDK(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "255/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "315/30ZR21 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://newsroom.porsche.com/en/2022/products/porsche-911-gt3-rs-dream-lap-nuerburgring-nordschleife-30028.html"
+    },
+    {
+      "rank": 12,
+      "manufacturer": "PORSCHE",
+      "model": "Taycan Turbo GT(Weissachパッケージ+Mantheyキット)",
+      "lap_time": "6:55.533",
+      "year": 2026,
+      "note": "4ドア/EV初のニュルブルクリンク7分切り。Mantheyキットは2026年6月よりWeissachパッケージ装着のTaycan Turbo GT全車を対象に発売予定。Lars Kern選手がドライブし、従来のTaycan Turbo GT(Weissachパッケージのみ)の記録を12秒、Xiaomi SU7 Ultraの記録を9秒以上更新。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "デュアルモーターAWD(800V級プラットフォーム)"
+        },
+        {
+          "key": "power",
+          "value": "600kW(804馬力、通常時)/730kW(978馬力、Attackモード)"
+        },
+        {
+          "key": "torque",
+          "value": "1,270Nm(ローンチコントロール時)"
+        },
+        {
+          "key": "weight",
+          "value": "約2.3トン"
+        },
+        {
+          "key": "transmission",
+          "value": "2速AT(リア)/1速(フロント)、AWD"
+        },
+        {
+          "key": "tire_front",
+          "value": "265/35ZR21 グッドイヤー イーグル F1 スーパースポーツ(タイカン専用開発)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "305/30ZR21 グッドイヤー イーグル F1 スーパースポーツ(タイカン専用開発)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=ibNH4GBFDQ8",
+      "source_url": "https://newsroom.porsche.com/en/2026/products/porsche-taycan-turbo-gt-manthey-kit-record-nordschleife-42424.html"
+    },
+    {
+      "rank": 13,
+      "manufacturer": "PORSCHE",
+      "model": "911 GT3(992、Mantheyキット装着、通称「GT3 MR」)",
+      "lap_time": "6:55.737",
+      "year": 2024,
+      "note": "フェイスリフト前の992.1型GT3にMantheyキットを装着した最初の記録(後継の992.2型は6:50.863、上位ランク参照)。Kévin Estre選手がドライブし、無改造の標準GT3を4.19秒上回った。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒(無改造)"
+        },
+        {
+          "key": "power",
+          "value": "510PS(502馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "437Nm(322lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,435kg(3,164lbs、チタン製ロールケージで軽量化)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "255/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "315/30ZR21 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://autofreak.com/porsche-911-gt3-rs-manthey-racing-nurburgring-record-2024/"
+    },
+    {
+      "rank": 14,
+      "manufacturer": "PORSCHE",
+      "model": "911 GT3 RS(991.2、標準)",
+      "lap_time": "6:56.4",
+      "year": 2018,
+      "note": "2018年4月16日、Kevin Estre選手が記録樹立(Weissachパッケージ)。先代991.1型RSを23.6秒、918スパイダーを上回った。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒"
+        },
+        {
+          "key": "power",
+          "value": "520馬力"
+        },
+        {
+          "key": "torque",
+          "value": "470Nm(346lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,430kg(3,153lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "265/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "325/30ZR21 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.autoevolution.com/cars/porsche-911-gt3-rs-2018.html"
+    },
+    {
+      "rank": 15,
+      "manufacturer": "PORSCHE",
+      "model": "918スパイダー(Weissachパッケージ)",
+      "lap_time": "6:57.00",
+      "year": 2013,
+      "note": "世界限定918台。市販車として初めてニュルブルクリンク7分の壁を破った歴史的モデル。2013年9月4日、Marc Lieb選手が記録樹立。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.6L 自然吸気V8+電動モーター2基(プラグインハイブリッド)"
+        },
+        {
+          "key": "power",
+          "value": "システム合計887馬力"
+        },
+        {
+          "key": "torque",
+          "value": "1,275Nm(940lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,640kg(3,616lbs、Weissachパッケージ)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "265/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "325/30ZR21 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=PWyPefsCZaM",
+      "source_url": "https://www.motorauthority.com/news/1086847_porsche-918-spyder-claims-top-production-nrburgring-nordschleife-lap-time"
+    },
+    {
+      "rank": 16,
+      "manufacturer": "FORD",
+      "model": "マスタング GTD",
+      "lap_time": "6:57.685",
+      "year": 2025,
+      "note": "米国メーカー製市販車として初めてニュルブルクリンク7分の壁を破った(2024年10月17日、Dirk Müller選手)。なお、同車は別のオンボード動画で6:52.072という、より速いタイムも記録している(こちらは非公式・広報用の走行との報道もあり、公式発表として広く報じられているのは6:57.685)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "5.2L スーパーチャージドV8"
+        },
+        {
+          "key": "power",
+          "value": "815馬力"
+        },
+        {
+          "key": "torque",
+          "value": "約664lb-ft(900Nm)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,814kg(4,000lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速デュアルクラッチ(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "325/30ZR20 ミシュラン パイロット・スポーツ Cup 2 R"
+        },
+        {
+          "key": "tire_rear",
+          "value": "345/30ZR20 ミシュラン パイロット・スポーツ Cup 2 R"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=Fxw6mf_5j-U",
+      "source_url": "https://www.fordracing.com/articles/series/road-racing/2026/4/mustang-gtd-record-time-nurburgring"
+    },
+    {
+      "rank": 17,
+      "manufacturer": "YANGWANG (BYD)",
+      "model": "U9 Xtreme",
+      "lap_time": "6:59.157",
+      "year": 2025,
+      "note": "世界限定30台以下。4モーターEVで電動ハイパーカーとして初めて7分の壁を破った。2025年8月22日記録樹立。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4モーターAWD(1,200V級プラットフォーム)"
+        },
+        {
+          "key": "power",
+          "value": "約3,000馬力以上(合計2,220kW)"
+        },
+        {
+          "key": "torque",
+          "value": "非公表(4モーター独立トルクベクタリング)"
+        },
+        {
+          "key": "weight",
+          "value": "非公表"
+        },
+        {
+          "key": "transmission",
+          "value": "モーター直結×4(AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "325/30ZR20 ジーティー GitiSport e・GTR2 PRO(セミスリック、推定サイズ)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "325/30ZR20 ジーティー GitiSport e・GTR2 PRO(セミスリック、推定サイズ)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=5ijer_-uNbA",
+      "source_url": "https://carnewschina.com/2025/09/20/byd-unveiled-the-yangwang-u9-xtreme-achieving-496-22-km-h-a-nurburgring-lap-of-659-157byd-unveils-the-yangwang-u9-xtreme-achieving-496-22-km-h-a-nurburgring-lap-of-659-157/"
+    },
+    {
+      "rank": 18,
+      "manufacturer": "PORSCHE",
+      "model": "718 Cayman GT4 RS(Mantheyキット装着)",
+      "lap_time": "7:03.121",
+      "year": 2023,
+      "note": "公証人立ち会いのもとJörg Bergmeister選手が記録樹立、標準GT4 RSを6.179秒更新(公式発表値)。一部情報源では6:58.1という、より速いタイムも見られるが、計測方法・条件の詳細が確認できないため、公式発表の7:03.121を採用。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒(無改造)"
+        },
+        {
+          "key": "power",
+          "value": "500PS(493馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "449Nm(331lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,415kg(3,120lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(MT設定なし、MR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "245/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "295/30ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=SMaQX7MID5I",
+      "source_url": "https://www.nuerburgring.de/news/porsche-718-gt4-rs-setzt-mit-manthey-kit-neue-offizielle-rundenzeit?locale=en"
+    },
+    {
+      "rank": 19,
+      "manufacturer": "RIMAC",
+      "model": "ネヴェーラ",
+      "lap_time": "7:05.298",
+      "year": 2023,
+      "note": "世界限定150台。量産EVとして当時最速のニュルブルクリンク記録。2023年8月18日、Martin Kodrić選手のドライブで記録樹立。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4モーターAWD(バッテリー容量120kWh)"
+        },
+        {
+          "key": "power",
+          "value": "1,914馬力"
+        },
+        {
+          "key": "torque",
+          "value": "2,360Nm(1,740lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約2,150kg(4,740lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "モーター直結(前1速/後2速)、AWD"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/35ZR20 ミシュラン パイロット・スポーツ Cup 2 R(記録走行時装着)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "315/35ZR20 ミシュラン パイロット・スポーツ Cup 2 R(記録走行時装着)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=L7oRLhYHfRc",
+      "source_url": "https://www.techeblog.com/rimac-nevera-nurburgring-record-electric-production-car/"
+    },
+    {
+      "rank": 20,
+      "manufacturer": "NISSAN",
+      "model": "GT-R NISMO(トラックオプションパッケージ装着)",
+      "lap_time": "7:08.679",
+      "year": 2020,
+      "note": "「N-Attackパッケージ」装着。Michael Krumm選手(NISMOブランドアンバサダー)のドライブで記録樹立、当時の量産車最速記録。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.8L V6 ツインターボ(VR38DETT)"
+        },
+        {
+          "key": "power",
+          "value": "600馬力"
+        },
+        {
+          "key": "torque",
+          "value": "652Nm(481lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,720kg(3,792lbs、N-Attackパッケージで軽量化)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速デュアルクラッチ(AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "255/40ZR20 ダンロップ SPスポーツマックス GT600 DSST CTT"
+        },
+        {
+          "key": "tire_rear",
+          "value": "285/35ZR20 ダンロップ SPスポーツマックス GT600 DSST CTT"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=1VPm3CZiQjc",
+      "source_url": "https://usa.nissannews.com/en-US/videos/krumm-attacks-n-rburgring-in-nissan-nismo-gt-r"
+    },
+    {
+      "rank": 21,
+      "manufacturer": "PORSCHE",
+      "model": "718 Cayman GT4 RS(標準、Mantheyキットなし)",
+      "lap_time": "7:09.3",
+      "year": 2021,
+      "note": "無改造の標準車。情報源により20.6km区間換算で7:04.51とする表記もあり、若干の揺れがある点に注意。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒"
+        },
+        {
+          "key": "power",
+          "value": "500PS(493馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "449Nm(331lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,464kg(3,227lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速PDK(MT設定なし、MR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "245/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "295/30ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.thedrive.com/news/42806/new-porsche-718-cayman-gt4-rs-laps-nurburgring-quicker-than-last-911-gt3"
+    },
+    {
+      "rank": 22,
+      "manufacturer": "CHEVROLET",
+      "model": "コルベット Z06",
+      "lap_time": "7:11.826",
+      "year": 2025,
+      "note": "自然吸気V8。GM車両性能マネージャーAaron Linkがドライブ。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "5.5L 自然吸気フラットプレーンV8(LT6)"
+        },
+        {
+          "key": "power",
+          "value": "670馬力"
+        },
+        {
+          "key": "torque",
+          "value": "624Nm(460lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,588kg(3,500lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速デュアルクラッチ(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/30ZR20 ミシュラン パイロット・スポーツ Cup 2 R(Z07パフォーマンスパッケージ、記録走行時装着)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "345/25ZR21 ミシュラン パイロット・スポーツ Cup 2 R(Z07パフォーマンスパッケージ、記録走行時装着)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=RNPI5xCwU74",
+      "source_url": "https://nuerburgring.de/news/7-11-826-6-50-763-6-49-275-der-chevrolet-corvette-z06-zr1-und-zr1x-erobern-die-nordschleife-in-rekordzeit?locale=en"
+    },
+    {
+      "rank": 23,
+      "manufacturer": "DODGE",
+      "model": "バイパー SRT10 ACR",
+      "lap_time": "7:12.13",
+      "year": 2011,
+      "note": "重要な訂正:このタイムは2016年型ACR(第5世代、VX1型)ではなく、2011年9月に先代(第4世代、ZB型)のViper SRT10 ACRがDominik Farnbacher選手のドライブで樹立した記録。後継の2017年型ACR(第5世代)は7:03.45とさらに更新している。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "8.4L 自然吸気V10"
+        },
+        {
+          "key": "power",
+          "value": "600馬力"
+        },
+        {
+          "key": "torque",
+          "value": "759Nm(560lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,535kg(3,384lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "295/30ZR18 ミシュラン パイロット・スポーツ Cup"
+        },
+        {
+          "key": "tire_rear",
+          "value": "345/30ZR19 ミシュラン パイロット・スポーツ Cup"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.prnewswire.com/news-releases/dodge-viper-srt10-acr-reclaims-production-car-lap-record-at-nurburgring-with-71213-130633168.html"
+    },
+    {
+      "rank": 24,
+      "manufacturer": "LEXUS",
+      "model": "LFA ニュルブルクリンクパッケージ",
+      "lap_time": "7:14.64",
+      "year": 2011,
+      "note": "全500台のLFAのうち50台限定の設定だったが、最終的に64台が生産された。当時の量産車最速記録。テストドライバーの飯田章選手が記録樹立。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.8L 自然吸気V10"
+        },
+        {
+          "key": "power",
+          "value": "571PS(563馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "480Nm(354lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,470kg(3,241lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速AMT(ASG、FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "265/35ZR20 ブリヂストン ポテンザ RE070(標準装着の公道用タイヤ)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "305/30ZR20 ブリヂストン ポテンザ RE070(標準装着の公道用タイヤ)"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=uYYdFHK__xQ",
+      "source_url": "https://blog.lexus.co.uk/lexus-lfa-nurburgring-package-laps-the-nurburgring-track-in-a-record-breaking-7-14/"
+    },
+    {
+      "rank": 25,
+      "manufacturer": "CHEVROLET",
+      "model": "カマロ ZL1 1LE",
+      "lap_time": "7:16.04",
+      "year": 2018,
+      "note": "歴代カマロ最速のニュルブルクリンク記録。2024年モデルをもって生産終了(北米カマロ全体が2024年に一時生産終了、将来的な復活をGMが示唆)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "6.2L スーパーチャージドV8(LT4)"
+        },
+        {
+          "key": "power",
+          "value": "650馬力"
+        },
+        {
+          "key": "torque",
+          "value": "650lb-ft(881Nm)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,721kg(3,794lbs、ZL1比で軽量化)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT/10速AT(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "305/30ZR19 グッドイヤー イーグル F1 スーパーカー 3R"
+        },
+        {
+          "key": "tire_rear",
+          "value": "325/30ZR19 グッドイヤー イーグル F1 スーパーカー 3R"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=5_xrAMCYlCo",
+      "source_url": "https://www.autoevolution.com/news/2018-chevrolet-camaro-zl1-1le-sets-71604-nurburgring-lap-heres-the-pov-video-118822.html"
+    },
+    {
+      "rank": 26,
+      "manufacturer": "BMW",
+      "model": "M4 CSL",
+      "lap_time": "7:18.137",
+      "year": 2022,
+      "note": "BMWグループ市販車として歴代最速のニュルブルクリンク記録。世界限定1,000台(完売済み)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.0L 直列6気筒ツインターボ(S58)"
+        },
+        {
+          "key": "power",
+          "value": "543馬力"
+        },
+        {
+          "key": "torque",
+          "value": "650Nm(479lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,625kg(3,584lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速AT(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/35ZR19 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "285/30ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=CtSqZOz3sGs",
+      "source_url": "https://www.bmw-m.com/en/topics/magazine-article-pool/bmw-m4-csl-rekord-nurburgring-nordschleife.html"
+    },
+    {
+      "rank": 27,
+      "manufacturer": "BMW",
+      "model": "M4 CS",
+      "lap_time": "7:21.989",
+      "year": 2024,
+      "note": "2026年モデルで設定廃止となり、現在は新規注文不可。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.0L 直列6気筒ツインターボ(S58)"
+        },
+        {
+          "key": "power",
+          "value": "543馬力"
+        },
+        {
+          "key": "torque",
+          "value": "650Nm(479lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,770kg(3,902lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速AT(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/35ZR19 ミシュラン パイロット・スポーツ Cup 2(標準、Cup 2 Rはオプション)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "285/30ZR20 ミシュラン パイロット・スポーツ Cup 2(標準、Cup 2 Rはオプション)"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.bmwusa.com/vehicles/m-series/bmw-4-series-m-models/bmw-m4-coupe.html"
+    },
+    {
+      "rank": 28,
+      "manufacturer": "BMW",
+      "model": "M2 CS",
+      "lap_time": "7:25.5",
+      "year": 2025,
+      "note": "コンパクトカークラスの記録。2025年4月11日、開発エンジニアJörg Weidingerがドライブし、従来のクラス最速記録を8秒更新。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.0L 直列6気筒ツインターボ(S58)"
+        },
+        {
+          "key": "power",
+          "value": "523馬力"
+        },
+        {
+          "key": "torque",
+          "value": "649Nm(479lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,710kg(3,770lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速AT(MT設定なし、FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "245/35ZR19 ミシュラン パイロット・スポーツ Cup 2 コネクト"
+        },
+        {
+          "key": "tire_rear",
+          "value": "265/35ZR19 ミシュラン パイロット・スポーツ Cup 2 コネクト"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.press.bmwgroup.com/usa/article/detail/T0451163EN_US/the-bmw-m2-cs-sets-a-new-record-of-7:25-5-on-the-nuerburgring-nordschleife?language=en_US"
+    },
+    {
+      "rank": 29,
+      "manufacturer": "BMW",
+      "model": "M3 CS",
+      "lap_time": "7:28.760",
+      "year": 2024,
+      "note": "M3 Competitionより約34kg軽量。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.0L 直列6気筒ツインターボ(S58)"
+        },
+        {
+          "key": "power",
+          "value": "543馬力"
+        },
+        {
+          "key": "torque",
+          "value": "650Nm(479lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,708kg(3,765lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速AT(FR/AWD設定あり)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/35ZR19 ピレリ P ZERO Trofeo R"
+        },
+        {
+          "key": "tire_rear",
+          "value": "285/30ZR20 ピレリ P ZERO Trofeo R"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.znmperformance.com/znm-performance-blog/bmw-m3-cs-m4-csl-nurburgring-lap-records/"
+    },
+    {
+      "rank": 30,
+      "manufacturer": "PORSCHE",
+      "model": "718 Cayman GT4(標準、非RS)",
+      "lap_time": "7:32",
+      "year": 2019,
+      "note": "GT4 RSの前身にあたる無改造の標準車。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒"
+        },
+        {
+          "key": "power",
+          "value": "414馬力"
+        },
+        {
+          "key": "torque",
+          "value": "420Nm(309lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,420kg(3,131lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT(MR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "245/35ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "295/30ZR20 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://fastestlaps.com/tests/231ahrm4mb7a"
+    },
+    {
+      "rank": 31,
+      "manufacturer": "BMW",
+      "model": "M2(標準グレード、G87)",
+      "lap_time": "7:38.7",
+      "year": 2023,
+      "note": "無改造の標準グレード。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.0L 直列6気筒ツインターボ(S58)"
+        },
+        {
+          "key": "power",
+          "value": "473馬力"
+        },
+        {
+          "key": "torque",
+          "value": "550Nm(406lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,730kg(3,814lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT/8速AT(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/35ZR19 ミシュラン パイロット・スポーツ 4S"
+        },
+        {
+          "key": "tire_rear",
+          "value": "285/30ZR20 ミシュラン パイロット・スポーツ 4S"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.bmwusa.com/vehicles/m-series/bmw-2-series-m-models/bmw-m2-coupe.html"
+    },
+    {
+      "rank": 32,
+      "manufacturer": "BMW",
+      "model": "M3 Competition xDrive(セダン)",
+      "lap_time": "7:43.65",
+      "year": 2022,
+      "note": "4ドアAWDセダンとしての記録。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.0L 直列6気筒ツインターボ(S58)"
+        },
+        {
+          "key": "power",
+          "value": "523馬力"
+        },
+        {
+          "key": "torque",
+          "value": "650Nm(479lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,810kg(3,990lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "8速AT(AWD)"
+        },
+        {
+          "key": "tire_front",
+          "value": "275/35ZR19 ミシュラン パイロット・スポーツ 4S"
+        },
+        {
+          "key": "tire_rear",
+          "value": "285/30ZR20 ミシュラン パイロット・スポーツ 4S"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.bmwusa.com/vehicles/m-series/m3.html"
+    },
+    {
+      "rank": 33,
+      "manufacturer": "HONDA",
+      "model": "シビック タイプR(FL5)",
+      "lap_time": "7:44.881",
+      "year": 2023,
+      "note": "当時のFF(前輪駆動)車記録(その後さらに更新されている)。2023年3月24日、ホンダ開発チームが記録樹立、ルノー メガーヌRS トロフィーRの記録を上回った。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "2.0L 直列4気筒ターボ(K20C1)"
+        },
+        {
+          "key": "power",
+          "value": "329PS(325馬力、欧州/日本仕様)"
+        },
+        {
+          "key": "torque",
+          "value": "420Nm(310lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,429kg(3,150lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT(FF)"
+        },
+        {
+          "key": "tire_front",
+          "value": "265/30ZR19 ミシュラン パイロット・スポーツ 4S"
+        },
+        {
+          "key": "tire_rear",
+          "value": "265/30ZR19 ミシュラン パイロット・スポーツ 4S"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=fFEc_-2c4u8",
+      "source_url": "https://global.honda/en/topics/2023/4_2023-04-20eng.html"
+    },
+    {
+      "rank": 34,
+      "manufacturer": "RENAULT",
+      "model": "メガーヌ RS トロフィーR",
+      "lap_time": "7:45.389",
+      "year": 2019,
+      "note": "20.832kmフルラップでのタイム(20.6km区間では7:40.1)。限定生産で、2019年当時のFF車記録保持者(2023年のシビック タイプRに更新されるまで)。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "1.8L 直列4気筒ターボ"
+        },
+        {
+          "key": "power",
+          "value": "300PS(296馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "400Nm(295lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,306kg(2,879lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT(FF)"
+        },
+        {
+          "key": "tire_front",
+          "value": "245/35ZR19 ブリヂストン ポテンザ S007"
+        },
+        {
+          "key": "tire_rear",
+          "value": "245/35ZR19 ブリヂストン ポテンザ S007"
+        }
+      ],
+      "youtube_url": "https://www.youtube.com/watch?v=jLfbxuN75lA",
+      "source_url": "https://media.alpinecars.com/new-megane-rs-trophy-r-record-at-the-nurburgring-for-the-best-performing-model-ever-marketed-by-renault/"
+    },
+    {
+      "rank": 35,
+      "manufacturer": "PORSCHE",
+      "model": "718 Cayman S(981型)",
+      "lap_time": "7:46.7",
+      "year": 2016,
+      "note": "718(982型)登場前、自然吸気フラット6を積む981型末期のケイマンによる記録。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "3.4L 自然吸気水平対向6気筒"
+        },
+        {
+          "key": "power",
+          "value": "325馬力"
+        },
+        {
+          "key": "torque",
+          "value": "370Nm(273lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,345kg(2,965lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT/7速PDK(MR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "235/35ZR20 ミシュラン パイロット・スーパースポーツ(20インチオプション)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "265/35ZR20 ミシュラン パイロット・スーパースポーツ(20インチオプション)"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://fastestlaps.com/tests/kch13z58l4bd"
+    },
+    {
+      "rank": 36,
+      "manufacturer": "VOLKSWAGEN",
+      "model": "ゴルフ GTI クラブスポーツS",
+      "lap_time": "7:47.19",
+      "year": 2016,
+      "note": "限定生産、後席なしの軽量特別仕様。当時のFF車記録。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "2.0L 直列4気筒ターボ"
+        },
+        {
+          "key": "power",
+          "value": "306馬力"
+        },
+        {
+          "key": "torque",
+          "value": "380Nm(280lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,285kg(2,833lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT(FF)"
+        },
+        {
+          "key": "tire_front",
+          "value": "235/35ZR19 ミシュラン パイロット・スポーツ Cup 2"
+        },
+        {
+          "key": "tire_rear",
+          "value": "235/35ZR19 ミシュラン パイロット・スポーツ Cup 2"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.volkswagen-newsroom.com/en/international-driving-presentation-the-new-golf-gti-clubsport-s-2776/record-breaking-lap-of-the-nuerburgring-the-golf-gti-clubsport-s-at-the-green-hell-2790"
+    },
+    {
+      "rank": 37,
+      "manufacturer": "VOLKSWAGEN",
+      "model": "ゴルフR「20 Years」",
+      "lap_time": "7:47.31",
+      "year": 2023,
+      "note": "ゴルフR発売20周年記念限定モデル。歴代ゴルフR最速。Benjamin Leuchter選手がドライブ。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "2.0L 直列4気筒ターボ(EA888)"
+        },
+        {
+          "key": "power",
+          "value": "333PS(328馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "約420Nm(310lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "約1,560kg(3,439lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速DSG(AWD、4Motion)"
+        },
+        {
+          "key": "tire_front",
+          "value": "235/35ZR19 ミシュラン パイロット・スポーツ 4S"
+        },
+        {
+          "key": "tire_rear",
+          "value": "235/35ZR19 ミシュラン パイロット・スポーツ 4S"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.volkswagen-newsroom.com/en/press-releases/the-golf-r-20-years-is-the-fastest-volkswagen-r-ever-on-the-nuerburgring-nordschleife-15124"
+    },
+    {
+      "rank": 38,
+      "manufacturer": "VOLKSWAGEN",
+      "model": "ゴルフ GTI クラブスポーツ(標準)",
+      "lap_time": "8:03",
+      "year": 2020,
+      "note": "本リストの中で唯一8分を超えるタイムだが、参考情報として掲載。専用の「ニュルブルクリンクモード」を搭載。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "2.0L 直列4気筒ターボ"
+        },
+        {
+          "key": "power",
+          "value": "300PS(296馬力)"
+        },
+        {
+          "key": "torque",
+          "value": "400Nm(295lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,471kg(3,243lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "7速DSG(FF)"
+        },
+        {
+          "key": "tire_front",
+          "value": "225/40R18 ブリヂストン ポテンザ S005(標準装着、推定)"
+        },
+        {
+          "key": "tire_rear",
+          "value": "225/40R18 ブリヂストン ポテンザ S005(標準装着、推定)"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://fastestlaps.com/tests/sgusir5z5z0k"
+    },
+    {
+      "rank": 39,
+      "manufacturer": "PORSCHE",
+      "model": "718 Cayman GTS 4.0",
+      "lap_time": "非公開/N/A",
+      "year": 2019,
+      "note": "ノルドシュライフェでの公式ラップタイムは確認できなかった。確認できたのは、より短い「GPスプリント」コース(ノルドシュライフェとは別レイアウト)での1:38.8というタイムのみ。捏造を避けるため、順位を付けず参考情報としてリスト末尾に掲載。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "4.0L 自然吸気水平対向6気筒"
+        },
+        {
+          "key": "power",
+          "value": "394馬力"
+        },
+        {
+          "key": "torque",
+          "value": "420Nm(310lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,470kg(3,241lbs)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT/7速PDK(MR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "235/35ZR20 ミシュラン パイロット・スポーツ 4S"
+        },
+        {
+          "key": "tire_rear",
+          "value": "265/35ZR20 ミシュラン パイロット・スポーツ 4S"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://fastestlaps.com/tests/szne8nmv3ogj"
+    },
+    {
+      "rank": 40,
+      "manufacturer": "FORD",
+      "model": "マスタング ダークホース(標準、非GTD)",
+      "lap_time": "非公開/N/A",
+      "year": 2024,
+      "note": "ノルドシュライフェでの公式ラップタイムは確認できなかった(非公式の推定値のみ複数存在)。マスタングGTD(本リスト16位、6:57.685)とは別のトリムであり、混同注意。捏造を避けるため、順位を付けず参考情報としてリスト末尾に掲載。",
+      "is_gr_corolla": false,
+      "specs": [
+        {
+          "key": "engine",
+          "value": "5.0L 自然吸気V8(Gen 4 Coyote)"
+        },
+        {
+          "key": "power",
+          "value": "500馬力"
+        },
+        {
+          "key": "torque",
+          "value": "567Nm(418lb-ft)"
+        },
+        {
+          "key": "weight",
+          "value": "1,800kg(3,968lbs、MT仕様)"
+        },
+        {
+          "key": "transmission",
+          "value": "6速MT/10速AT(FR)"
+        },
+        {
+          "key": "tire_front",
+          "value": "305/30ZR19 ミシュラン パイロット・スポーツ 4S"
+        },
+        {
+          "key": "tire_rear",
+          "value": "305/30ZR19 ミシュラン パイロット・スポーツ 4S"
+        }
+      ],
+      "youtube_url": null,
+      "source_url": "https://www.mustang7g.com/base-dark-horse-mustang-laps-the-nurburgring/"
+    }
+  ]
+}

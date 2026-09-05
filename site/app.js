@@ -28,6 +28,19 @@
     clock:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
       '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg>',
+    timer:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+      '<circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.2"/><path d="M10 2.5h4"/><path d="M18.5 6l1.3-1.3"/></svg>',
+  };
+
+  var CAR_SPEC_LABELS = {
+    engine: "エンジン",
+    power: "最高出力",
+    torque: "最大トルク",
+    weight: "車両重量",
+    transmission: "トランスミッション",
+    tire_front: "タイヤ(前)",
+    tire_rear: "タイヤ(後)",
   };
 
   var LAYOUT = [
@@ -38,6 +51,7 @@
     { key: "media_reviews", size: "half", icon: "star" },
     { key: "social_buzz", size: "half", icon: "chat" },
     { key: "complaints", size: "full", icon: "alert" },
+    { key: "nurburgring", size: "full", icon: "timer" },
   ];
 
   var SENTIMENT_LABEL_JA = { positive: "ポジティブ", negative: "ネガティブ", neutral: "中立" };
@@ -497,6 +511,111 @@
     return panel;
   }
 
+  function buildNurburgringRow(entry) {
+    // 順位・タイム・車名・概要/Spec/動画/出典ボタンを1行に並べた省スペースレイアウト。
+    // 概要とスペックは既定非表示で、ボタンで行の下に個別展開される。
+    var row = el("div", "nurburgring-row" + (entry.is_gr_corolla ? " nurburgring-row--gr" : ""));
+
+    row.appendChild(el("span", "nurburgring-row__rank", String(entry.rank)));
+    row.appendChild(el("span", "nurburgring-row__time", entry.lap_time));
+    var nameParts = [entry.manufacturer, entry.model].filter(Boolean).join(" ");
+    row.appendChild(el("span", "nurburgring-row__name", nameParts));
+    if (entry.is_gr_corolla) row.appendChild(el("span", "gr-tag", "GR COROLLA"));
+
+    var actions = el("div", "nurburgring-row__actions");
+    row.appendChild(actions);
+
+    var overviewParts = [];
+    if (entry.year) overviewParts.push(String(entry.year));
+    if (entry.note) overviewParts.push(entry.note);
+    var hasOverview = overviewParts.length > 0;
+    var overviewBtn, overviewWrap;
+    if (hasOverview) {
+      overviewBtn = el("button", "tab-group__btn nurburgring-row__toggle-btn", "概要");
+      actions.appendChild(overviewBtn);
+    }
+
+    var hasSpecs = entry.specs && entry.specs.length > 0;
+    var specBtn, specWrap;
+    if (hasSpecs) {
+      specBtn = el("button", "tab-group__btn nurburgring-row__toggle-btn", "Spec");
+      actions.appendChild(specBtn);
+    }
+
+    if (entry.youtube_url) {
+      var ytLink = el("a", "series-card__link nurburgring-row__toggle-btn", "オンボード動画を見る ↗");
+      ytLink.href = entry.youtube_url;
+      ytLink.target = "_blank";
+      ytLink.rel = "noopener noreferrer";
+      actions.appendChild(ytLink);
+    }
+    if (entry.source_url) {
+      var srcLink = el("a", "series-card__link nurburgring-row__toggle-btn", "出典を見る ↗");
+      srcLink.href = entry.source_url;
+      srcLink.target = "_blank";
+      srcLink.rel = "noopener noreferrer";
+      actions.appendChild(srcLink);
+    }
+
+    if (hasOverview) {
+      overviewWrap = el("div", "nurburgring-row__overview");
+      overviewWrap.appendChild(el("p", null, overviewParts.join(" · ")));
+      row.appendChild(overviewWrap);
+      overviewBtn.addEventListener("click", function () {
+        var visible = overviewWrap.classList.toggle("is-visible");
+        overviewBtn.classList.toggle("is-active", visible);
+      });
+    }
+
+    if (hasSpecs) {
+      specWrap = el("div", "nurburgring-row__specs");
+      var specList = el("dl", "nurburgring-row__spec-list");
+      entry.specs.forEach(function (spec) {
+        specList.appendChild(el("dt", null, CAR_SPEC_LABELS[spec.key] || spec.key));
+        specList.appendChild(el("dd", null, spec.value));
+      });
+      specWrap.appendChild(specList);
+      row.appendChild(specWrap);
+      specBtn.addEventListener("click", function () {
+        var visible = specWrap.classList.toggle("is-visible");
+        specBtn.classList.toggle("is-active", visible);
+      });
+    }
+
+    return row;
+  }
+
+  function buildNurburgringPanel(icon, nurData) {
+    var panel = el("section", "panel panel--full");
+    panel.id = "section-nurburgring";
+    var cars = nurData.cars || [];
+    panel.appendChild(buildPanelHeader(icon, "ニュルブルクリンク ラップタイムランキング", cars.length));
+    panel.appendChild(
+      el(
+        "p",
+        "panel__note",
+        "ニュルブルクリンク・ノルドシュライフェでの公道走行可能な市販車(限定生産モデル含む)の" +
+          "ラップタイムを速い順にまとめた、手動収集の静的リファレンスです。30分毎の自動収集対象では" +
+          "なく、不定期に更新します。純レーシングカー・プロトタイプ・ワンメイクレーサー等、公道登録" +
+          "できない車両は対象外としています。タイムは年式・タイヤ・オプション装備・計測区間により" +
+          "条件が異なるため、単純比較にはご注意ください。"
+      )
+    );
+    if (nurData.note) panel.appendChild(el("p", "panel__note", nurData.note));
+
+    if (cars.length === 0) {
+      panel.appendChild(el("p", "panel__empty", "現在、該当する情報はありません。"));
+      return panel;
+    }
+
+    var list = el("div", "nurburgring-list");
+    cars.forEach(function (entry) {
+      list.appendChild(buildNurburgringRow(entry));
+    });
+    panel.appendChild(list);
+    return panel;
+  }
+
   function collectSentimentItems(data) {
     var all = [];
     [
@@ -657,7 +776,7 @@
     return panel;
   }
 
-  function render(data) {
+  function render(data, nurData) {
     buildStats(data);
 
     board.innerHTML = "";
@@ -672,6 +791,12 @@
             data.sections.youtube_new_jp);
         if (!hasYoutubeData) return;
         board.appendChild(buildYoutubePanel(entry.icon, data));
+        return;
+      }
+      if (entry.key === "nurburgring") {
+        // data/nurburgring.jsonという別ファイルの手動更新の静的データで、
+        // 30分毎の自動収集対象(data.sections)には含まれないため専用に扱う。
+        if (nurData) board.appendChild(buildNurburgringPanel(entry.icon, nurData));
         return;
       }
       var section = data.sections && data.sections[entry.key];
@@ -705,12 +830,21 @@
     statusDot.classList.add("is-error");
   }
 
-  fetch("data/latest.json", { cache: "no-store" })
-    .then(function (res) {
+  function fetchJson(path) {
+    return fetch(path, { cache: "no-store" }).then(function (res) {
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.json();
+    });
+  }
+
+  fetchJson("data/latest.json")
+    .then(function (data) {
+      fetchJson("data/nurburgring.json")
+        .catch(function () { return null; })
+        .then(function (nurData) {
+          render(data, nurData);
+        });
     })
-    .then(render)
     .catch(function (err) {
       renderError("ダッシュボードデータの読み込みに失敗しました(" + err.message + ")。");
     });

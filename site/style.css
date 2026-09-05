@@ -935,6 +935,114 @@ a { color: inherit; }
 }
 .series-card__link:hover { background: var(--accent-soft); }
 
+/* ---- Nurburgring lap time ranking ---- */
+
+.nurburgring-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 14px 14px;
+}
+
+.nurburgring-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface-sunken);
+}
+
+.nurburgring-row--gr {
+  border-color: var(--spotlight);
+  background: var(--spotlight-soft);
+}
+
+.nurburgring-row__rank {
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+}
+
+.nurburgring-row__time {
+  flex-shrink: 0;
+  min-width: 72px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.nurburgring-row__name {
+  flex: 1;
+  min-width: 130px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nurburgring-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.nurburgring-row__toggle-btn {
+  padding: 3px 10px;
+  font-size: 0.68rem;
+}
+
+.nurburgring-row__actions .series-card__link {
+  margin: 0;
+  padding: 3px 10px;
+  font-size: 0.68rem;
+}
+
+.nurburgring-row__overview,
+.nurburgring-row__specs {
+  display: none;
+  flex-basis: 100%;
+  margin-top: 2px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+
+.nurburgring-row__overview.is-visible,
+.nurburgring-row__specs.is-visible {
+  display: block;
+}
+
+.nurburgring-row__spec-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  margin: 0;
+}
+
+.nurburgring-row__spec-list dt {
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.nurburgring-row__spec-list dd {
+  margin: 0;
+}
+
 /* ---- Footer ---- */
 
 .site-footer {
