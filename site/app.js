@@ -99,7 +99,11 @@
   var TRANSLATE_CACHE_MAX = 500;
   var translationQueue = [];
   var translationActive = 0;
-  var TRANSLATE_CONCURRENCY = 4;
+  var TRANSLATE_CONCURRENCY = 2;
+  // 翻訳エンドポイントは1ページ内の見出し数(数百件)に対してレート制限(HTTP 429)が
+  // かかりやすいため、429を検知した時点で残りのキューは諦める(無駄打ちで閲覧者や
+  // エンドポイント側に余計な負荷をかけない)。ページを再読み込みすれば再度試みる。
+  var translationRateLimited = false;
 
   function needsJapaneseTranslation(text) {
     return !!text && !/[぀-ヿ一-鿿]/.test(text);
@@ -141,6 +145,7 @@
       encodeURIComponent(text);
     return fetch(url)
       .then(function (res) {
+        if (res.status === 429) translationRateLimited = true;
         if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
       })
@@ -163,6 +168,10 @@
   }
 
   function pumpTranslationQueue() {
+    if (translationRateLimited) {
+      translationQueue.length = 0;
+      return;
+    }
     while (translationActive < TRANSLATE_CONCURRENCY && translationQueue.length > 0) {
       var job = translationQueue.shift();
       translationActive++;
@@ -183,6 +192,7 @@
       insertTranslation(body, beforeEl, cached);
       return;
     }
+    if (translationRateLimited) return;
     translationQueue.push({ text: text, body: body, beforeEl: beforeEl });
     pumpTranslationQueue();
   }
