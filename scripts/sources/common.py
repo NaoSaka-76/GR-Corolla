@@ -112,6 +112,57 @@ def sort_by_recency(items: list[dict]) -> list[dict]:
     return sorted(items, key=_key, reverse=True)
 
 
+_JAPANESE_CHAR_RE = re.compile(r"[぀-ヿ一-鿿]")
+
+
+def needs_japanese_translation(text: str) -> bool:
+    """日本語の文字を1つも含まない場合にTrueを返す(=英語など翻訳が必要な見出しとみなす)。"""
+    return bool(text) and not _JAPANESE_CHAR_RE.search(text)
+
+
+def translate_to_japanese(text: str) -> str | None:
+    """Google翻訳の非公式エンドポイントで英語→日本語に翻訳する。
+
+    公式APIキーを使わない無料のベストエフォート実装で、エンドポイントの仕様変更や
+    レート制限により失敗する可能性がある。失敗時はNoneを返し、呼び出し側は原文のみを
+    表示する(見出し文の翻訳なので、多少の意訳・機械翻訳的な表現になる点はご容赦を)。
+    """
+    if not text:
+        return None
+    try:
+        resp = _session().get(
+            "https://translate.googleapis.com/translate_a/single",
+            params={"client": "gtx", "sl": "en", "tl": "ja", "dt": "t", "q": text},
+            timeout=REQUEST_TIMEOUT,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        translated = "".join(chunk[0] for chunk in data[0] if chunk and chunk[0])
+        translated = translated.strip()
+        return translated or None
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def attach_japanese_translations(items: list[dict], limit: int = 400) -> None:
+    """各itemの"title"が日本語を含まない場合、"title_ja"として翻訳を付与する。
+
+    30分毎の実行時間や翻訳エンドポイントへの負荷を抑えるため、1回の実行あたりの
+    翻訳件数に上限を設けている(通常の運用では上限に達しない想定)。
+    """
+    count = 0
+    for item in items:
+        if count >= limit:
+            break
+        title = item.get("title")
+        if not title or not needs_japanese_translation(title):
+            continue
+        count += 1
+        translated = translate_to_japanese(title)
+        if translated and translated != title:
+            item["title_ja"] = translated
+
+
 _VIEW_MULTIPLIERS = {"k": 1_000, "m": 1_000_000, "b": 1_000_000_000}
 
 
