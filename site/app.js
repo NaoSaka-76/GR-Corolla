@@ -87,6 +87,106 @@
     return raw;
   }
 
+  // ---- 見出し文の日本語訳(クライアント側でベストエフォート機械翻訳) ------------
+  //
+  // 30分毎のGitHub Actions実行(共有IP)からGoogle翻訳の非公式エンドポイントを
+  // 呼ぶと、そのIPが翻訳側からレート制限(HTTP 429)を受けて確実に失敗するため、
+  // 各閲覧者のブラウザから直接呼び出す方式にしている(同エンドポイントは
+  // Access-Control-Allow-Origin: * でCORSが開放されており、ブラウザからは呼び出し可能)。
+  // ページ表示自体は英語見出しのまま即座に行い、翻訳は後追いで挿入する。
+
+  var TRANSLATE_CACHE_KEY = "gr_corolla_translate_cache_v1";
+  var TRANSLATE_CACHE_MAX = 500;
+  var translationQueue = [];
+  var translationActive = 0;
+  var TRANSLATE_CONCURRENCY = 4;
+
+  function needsJapaneseTranslation(text) {
+    return !!text && !/[぀-ヿ一-鿿]/.test(text);
+  }
+
+  function readTranslateCache() {
+    try {
+      var raw = localStorage.getItem(TRANSLATE_CACHE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function getCachedTranslation(text) {
+    var cache = readTranslateCache();
+    return cache[text];
+  }
+
+  function setCachedTranslation(text, translated) {
+    try {
+      var cache = readTranslateCache();
+      cache[text] = translated;
+      var keys = Object.keys(cache);
+      if (keys.length > TRANSLATE_CACHE_MAX) {
+        keys.slice(0, keys.length - TRANSLATE_CACHE_MAX).forEach(function (k) {
+          delete cache[k];
+        });
+      }
+      localStorage.setItem(TRANSLATE_CACHE_KEY, JSON.stringify(cache));
+    } catch (e) {
+      // ストレージ利用不可(プライベートモード等)は無視して原文表示のみに留める
+    }
+  }
+
+  function translateToJapanese(text) {
+    var url =
+      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ja&dt=t&q=" +
+      encodeURIComponent(text);
+    return fetch(url)
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        var translated = (data[0] || [])
+          .map(function (chunk) {
+            return chunk && chunk[0] ? chunk[0] : "";
+          })
+          .join("")
+          .trim();
+        return translated || null;
+      })
+      .catch(function () {
+        return null;
+      });
+  }
+
+  function insertTranslation(body, beforeEl, text) {
+    body.insertBefore(el("span", "item__title-ja", text), beforeEl);
+  }
+
+  function pumpTranslationQueue() {
+    while (translationActive < TRANSLATE_CONCURRENCY && translationQueue.length > 0) {
+      var job = translationQueue.shift();
+      translationActive++;
+      translateToJapanese(job.text).then(function (translated) {
+        translationActive--;
+        if (translated) {
+          insertTranslation(job.body, job.beforeEl, translated);
+          setCachedTranslation(job.text, translated);
+        }
+        pumpTranslationQueue();
+      });
+    }
+  }
+
+  function queueTranslation(text, body, beforeEl) {
+    var cached = getCachedTranslation(text);
+    if (cached) {
+      insertTranslation(body, beforeEl, cached);
+      return;
+    }
+    translationQueue.push({ text: text, body: body, beforeEl: beforeEl });
+    pumpTranslationQueue();
+  }
+
   function isWithin24h(item) {
     // YouTube動画はrecency_seconds(取得時点からの経過秒数)、ニュース記事は
     // publishedのRSS日時文字列から判定する。
@@ -144,7 +244,6 @@
 
     var body = el("div", "item__body");
     body.appendChild(el("span", "item__title", item.title || "(タイトル不明)"));
-    if (item.title_ja) body.appendChild(el("span", "item__title-ja", item.title_ja));
 
     var meta = el("div", "item__meta");
     if (recent) meta.appendChild(el("span", "new-badge", "24時間以内"));
@@ -158,6 +257,10 @@
     }
     body.appendChild(meta);
     a.appendChild(body);
+
+    if (item.title && needsJapaneseTranslation(item.title)) {
+      queueTranslation(item.title, body, meta);
+    }
 
     return a;
   }

@@ -9,7 +9,7 @@ import json
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from sources import common, complaints, events, media_reviews, motorsports, sentiment, social_buzz, toyota_news, youtube
+from sources import complaints, events, media_reviews, motorsports, sentiment, social_buzz, toyota_news, youtube
 
 JST = timezone(timedelta(hours=9))
 OUTPUT_PATH = Path(__file__).resolve().parent.parent / "site" / "data" / "latest.json"
@@ -36,28 +36,6 @@ def _motorsports_section() -> dict:
     }
 
 
-def _collect_title_items(node: object, found: list[dict]) -> None:
-    """辞書/リストを再帰的に辿り、"title"キーを持つ辞書のリストだけを集める。
-
-    見出し文の日本語訳付与のため、セクションごとに個別対応せず横断的に集約する。
-    """
-    if isinstance(node, list):
-        if node and all(isinstance(x, dict) and "title" in x for x in node):
-            found.extend(node)
-            return
-        for x in node:
-            _collect_title_items(x, found)
-    elif isinstance(node, dict):
-        for v in node.values():
-            _collect_title_items(v, found)
-
-
-def _attach_translations(dashboard: dict) -> None:
-    items: list[dict] = []
-    _collect_title_items(dashboard["sections"], items)
-    common.attach_japanese_translations(items)
-
-
 def build_dashboard() -> dict:
     now_utc = datetime.now(timezone.utc)
     now_jst = now_utc.astimezone(JST)
@@ -67,7 +45,7 @@ def build_dashboard() -> dict:
     buzz_data = social_buzz.fetch()
     complaint_data = complaints.fetch()
 
-    dashboard = {
+    return {
         "generated_at_utc": now_utc.isoformat(),
         "generated_at_jst": now_jst.strftime("%Y-%m-%d %H:%M JST"),
         "sections": {
@@ -122,9 +100,6 @@ def build_dashboard() -> dict:
             },
         },
     }
-
-    _attach_translations(dashboard)
-    return dashboard
 
 
 def main() -> None:
