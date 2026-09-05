@@ -827,6 +827,14 @@ a { color: inherit; }
   gap: 8px;
 }
 
+.schedule-next--recent {
+  background: var(--surface-sunken);
+}
+
+.schedule-next--recent .schedule-next__label {
+  color: var(--ink-muted);
+}
+
 .schedule-next__label {
   font-family: var(--font-display);
   font-weight: 800;

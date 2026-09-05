@@ -395,6 +395,17 @@
     return chart;
   }
 
+  function buildScheduleNextRow(label, race, modifierClass) {
+    if (!race) return null;
+    var row = el("div", "schedule-next" + (modifierClass ? " " + modifierClass : ""));
+    row.appendChild(el("span", "schedule-next__label", label));
+    row.appendChild(el("span", "schedule-next__date", race.date_range));
+    row.appendChild(
+      el("span", "schedule-next__track", [race.round, race.name, race.track].filter(Boolean).join(" · "))
+    );
+    return row;
+  }
+
   function buildScheduleBlock(s) {
     var wrap = el("div", "series-card__group");
     wrap.appendChild(el("div", "series-card__group-title", "レース日程"));
@@ -419,17 +430,6 @@
     if (rounds.length === 0) {
       wrap.appendChild(el("p", "panel__empty", "日程情報を取得できませんでした。"));
       return wrap;
-    }
-
-    var nextRace = rounds.filter(function (r) { return r.status === "upcoming"; })[0];
-    if (nextRace) {
-      var next = el("div", "schedule-next");
-      next.appendChild(el("span", "schedule-next__label", "次戦"));
-      next.appendChild(el("span", "schedule-next__date", nextRace.date_range));
-      next.appendChild(
-        el("span", "schedule-next__track", [nextRace.round, nextRace.name, nextRace.track].filter(Boolean).join(" · "))
-      );
-      wrap.appendChild(next);
     }
 
     var list = el("ul", "schedule-list");
@@ -592,10 +592,20 @@
       var card = el("div", "series-card series-card--" + key);
       card.appendChild(el("div", "series-card__header", s.label));
 
+      var rounds = s.schedule || [];
+      var nextRace = rounds.filter(function (r) { return r.status === "upcoming"; })[0];
+      var lastRace = rounds.filter(function (r) { return r.status === "completed"; }).slice(-1)[0];
+      var nextRow = buildScheduleNextRow("次戦", nextRace);
+      if (nextRow) card.appendChild(nextRow);
+
       var toggleBar = buildToggleBar();
       card.appendChild(toggleBar);
       addToggleSection(toggleBar, card, "レース日程", buildScheduleBlock(s));
       addToggleSection(toggleBar, card, "ランキング", buildRankingBlock(s));
+
+      var lastRow = buildScheduleNextRow("直近", lastRace, "schedule-next--recent");
+      if (lastRow) card.appendChild(lastRow);
+
       if (s.vehicle_info) {
         addToggleSection(toggleBar, card, "車両規定", buildRegulationBlock(s.vehicle_info.regulation));
         addToggleSection(toggleBar, card, "参戦車両", buildVehicleSection(s.vehicle_info));
