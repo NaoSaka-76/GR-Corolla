@@ -899,6 +899,93 @@ a { color: inherit; }
   white-space: nowrap;
 }
 
+.series-card__toggle-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.series-card__toggle-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+
+.series-card__toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.series-card__toggle-btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.series-card__group--collapsible {
+  display: none;
+}
+
+.series-card__group--collapsible.is-visible {
+  display: block;
+}
+
+.vehicle-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 14px 14px;
+}
+
+.vehicle-card__photo {
+  flex-shrink: 0;
+  width: 160px;
+}
+
+.vehicle-card__photo img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--surface-sunken);
+}
+
+.vehicle-card__body {
+  flex: 1;
+  min-width: 200px;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.vehicle-card__desc {
+  color: var(--ink);
+  line-height: 1.6;
+  margin: 0 0 6px;
+}
+
+.vehicle-card__meta {
+  margin: 0 0 4px;
+}
+
+.vehicle-card__credit {
+  font-size: 0.7rem;
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+
+.vehicle-card__credit a {
+  color: var(--accent);
+}
+
 .series-card__group {
   border-top: 1px solid var(--line);
 }
@@ -1027,19 +1114,19 @@ a { color: inherit; }
   display: block;
 }
 
-.nurburgring-row__spec-list {
+.spec-list {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 3px 10px;
   margin: 0;
 }
 
-.nurburgring-row__spec-list dt {
+.spec-list dt {
   color: var(--ink-muted);
   font-weight: 600;
 }
 
-.nurburgring-row__spec-list dd {
+.spec-list dd {
   margin: 0;
 }
 

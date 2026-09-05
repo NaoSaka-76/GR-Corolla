@@ -70,6 +70,100 @@ SERIES = {
 }
 
 
+# TC America・ARAの車両規定/参戦車両概要は頻繁に変わらないため、ニュース収集とは別に
+# 手動調査した内容を静的に保持する(スーパー耐久ST-Qは開発車両専用クラスのため対象外)。
+_GR_COROLLA_PHOTO = {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Toyota_GR_Corolla_2026.jpg",
+    "credit": "Gogerr",
+    "license": "CC BY-SA 4.0",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Toyota_GR_Corolla_2026.jpg",
+}
+
+VEHICLE_INFO = {
+    "tc_america": {
+        "regulation": {
+            "class_name": "TC(ツーリングカー)クラス",
+            "description": (
+                "2025年からTCXクラスとTCクラスが統合されて誕生した単一クラスで、旧TCAクラスは"
+                "廃止された。BMW M2 CS、Mazda3 TC、Hyundai Elantra N1 TC、Honda Civic Type R、"
+                "MINI Cooper JCW等、市販コンパクト/ハッチバックをベースとする複数ブランドの"
+                "車両が参戦しており、GR Corolla TCはこのクラス初の四輪駆動車として2025年シーズンに"
+                "デビューした。具体的な性能調整(Balance of Performance等)の詳細はTC America公式の"
+                "技術規則書に基づくが、一般には公開されていない。"
+            ),
+        },
+        "vehicle": {
+            "manufacturer": "TOYOTA",
+            "model": "GR Corolla TC",
+            "description": (
+                "市販グレードのGR CorollaをベースにTOYOTA GAZOO Racing North America(TGRNA)が"
+                "TC America用に開発したレース車両。市販車と同じ1.6L直列3気筒ターボエンジン"
+                "(300PS/295lb-ft)とGR-FOUR全輪駆動システム、8速オートメイテッドトランスミッションを"
+                "維持しつつ、ブレーキ・サスペンション・空力・電子制御・安全装備をレース用に強化している。"
+                "2025年シーズンより、JMF MotorsportsがGR Corolla TCを運用してレースに参戦している"
+                "(Virginia International Racewayでの優勝実績あり)。"
+            ),
+            "team": "開発: TOYOTA GAZOO Racing North America(TGRNA) / 運用: JMF Motorsports",
+            "debut": "2025年シーズン",
+            "specs": [
+                {"key": "engine", "value": "1.6L 直列3気筒ターボ(市販車と同型)"},
+                {"key": "power", "value": "300PS(295lb-ft)"},
+                {"key": "drivetrain", "value": "GR-FOUR 電子制御全輪駆動"},
+                {"key": "transmission", "value": "8速GAZOO Racing Direct Automatic Transmission(DAT)"},
+                {"key": "brakes", "value": "Alcon製(前6ポット/後2ポット)"},
+                {"key": "suspension", "value": "TGRNA設計カスタムMacPhersonストラット + JRi製減衰力調整式ダンパー"},
+                {
+                    "key": "safety",
+                    "value": "FIA公認ロールケージ、OMP製ファイバーグラスシート(6点式ハーネス)、OMP製電動消火装置",
+                },
+            ],
+            "photo": _GR_COROLLA_PHOTO,
+            "source_url": "https://www.tcamerica.us/news/715/toyota-gazoo-racing-north-america-unveils-new-gr-corolla-touring-car",
+        },
+    },
+    "ara": {
+        "regulation": {
+            "class_name": "RC2クラス",
+            "description": (
+                "ARAが採用するRC1〜RC5のクラス体系のうち、RC2は国際ラリー界の「Rally2」(旧R5)規定に"
+                "ほぼ相当する水準の車両を対象とするクラス。一般的なRally2規定では1.6Lターボエンジン"
+                "(リストリクター径32mm、出力目安280〜290馬力)・4WD・5〜6速シーケンシャルトランスミッション・"
+                "最低重量1,230kg等が定められ、量産2,500台以上の市販車をベースとすることが条件となる。"
+                "GR Corolla Rally RC2はFIA Rally2の公式ホモロゲーションは取得していないが、これと"
+                "ほぼ同等の性能を目標に開発された車両である。"
+            ),
+        },
+        "vehicle": {
+            "manufacturer": "TOYOTA",
+            "model": "GR Corolla Rally RC2",
+            "description": (
+                "市販グレードのGR CorollaをベースにTOYOTA GAZOO Racing World Rally Team(TGR-WRT)と"
+                "米国Rallysport Servicesが共同開発したラリー車両。WRC2で2年連続タイトルを獲得した"
+                "GR Yaris Rally2の開発ノウハウを流用し、同じ1.6L直列3気筒ターボエンジンとSadev製5速"
+                "シーケンシャルギアボックス、リアデファレンシャル、Alconブレーキ、Reiger製ダンパーを"
+                "採用しつつ、GR Corollaの長いホイールベースに合わせて各部を再設計している。"
+                "2026年3月開幕戦の100 Acre WoodラリーからARAのRC2クラスに参戦し、シーズン7戦"
+                "(予定)を戦う。"
+            ),
+            "team": (
+                "開発: TOYOTA GAZOO Racing World Rally Team(TGR-WRT)+ Rallysport Services / "
+                "ドライバー: セス・クインテロ、コ・ドライバー: Topi Luhtinen(車番103)"
+            ),
+            "debut": "2026年3月 100 Acre Woodラリー(開幕戦)",
+            "specs": [
+                {"key": "engine", "value": "1.6L 直列3気筒ターボ(GR Yaris Rally2と同型)"},
+                {"key": "drivetrain", "value": "4WD"},
+                {"key": "transmission", "value": "Sadev製5速シーケンシャル"},
+                {"key": "brakes", "value": "Alcon製(GR Yaris Rally2と共通)"},
+                {"key": "suspension", "value": "Reiger製ダンパー"},
+            ],
+            "photo": _GR_COROLLA_PHOTO,
+            "source_url": "https://tgr-wrt.com/gr-corolla-rally-car-to-compete-on-american-soil-in-2026/",
+        },
+    },
+}
+
+
 def _fetch_group(query_list: list[tuple], limit: int = 5) -> list[dict]:
     items: list[dict] = []
     for query, hl, gl, ceid in query_list:
@@ -91,6 +185,7 @@ def fetch() -> dict:
             "podium": None,
             "schedule": [],
             "schedule_link": None,
+            "vehicle_info": VEHICLE_INFO.get(key),
         }
 
     # TC America「TC」クラスは20台に満たないため、上限なく全ドライバーを取得し

@@ -38,7 +38,11 @@
     power: "最高出力",
     torque: "最大トルク",
     weight: "車両重量",
+    drivetrain: "駆動方式",
     transmission: "トランスミッション",
+    brakes: "ブレーキ",
+    suspension: "サスペンション",
+    safety: "安全装備",
     tire_front: "タイヤ(前)",
     tire_rear: "タイヤ(後)",
   };
@@ -479,6 +483,82 @@
     return wrap;
   }
 
+  function buildToggleBar() {
+    return el("div", "series-card__toggle-bar");
+  }
+
+  function addToggleSection(toggleBar, card, label, contentEl) {
+    contentEl.classList.add("series-card__group--collapsible");
+    var btn = el("button", "series-card__toggle-btn", label);
+    toggleBar.appendChild(btn);
+    card.appendChild(contentEl);
+    btn.addEventListener("click", function () {
+      var visible = contentEl.classList.toggle("is-visible");
+      btn.classList.toggle("is-active", visible);
+    });
+  }
+
+  function buildRegulationBlock(reg) {
+    var wrap = el("div", "series-card__group");
+    wrap.appendChild(el("div", "series-card__group-title", "車両規定: " + reg.class_name));
+    wrap.appendChild(el("p", "panel__note series-card__chart-note", reg.description));
+    return wrap;
+  }
+
+  function buildVehicleBlock(v) {
+    var wrap = el("div", "series-card__group");
+    wrap.appendChild(el("div", "series-card__group-title", "参戦車両: " + v.manufacturer + " " + v.model));
+
+    var card = el("div", "vehicle-card");
+    if (v.photo && v.photo.src) {
+      var figure = el("div", "vehicle-card__photo");
+      var img = el("img");
+      img.src = v.photo.src;
+      img.alt = v.manufacturer + " " + v.model;
+      img.loading = "lazy";
+      figure.appendChild(img);
+      card.appendChild(figure);
+    }
+
+    var body = el("div", "vehicle-card__body");
+    if (v.description) body.appendChild(el("p", "vehicle-card__desc", v.description));
+    if (v.team) body.appendChild(el("p", "vehicle-card__meta", "開発/運用: " + v.team));
+    if (v.debut) body.appendChild(el("p", "vehicle-card__meta", "参戦開始: " + v.debut));
+
+    if (v.specs && v.specs.length > 0) {
+      var specList = el("dl", "spec-list");
+      v.specs.forEach(function (spec) {
+        specList.appendChild(el("dt", null, CAR_SPEC_LABELS[spec.key] || spec.key));
+        specList.appendChild(el("dd", null, spec.value));
+      });
+      body.appendChild(specList);
+    }
+
+    if (v.source_url) {
+      var link = el("a", "series-card__link", "公式発表ページで実車写真を見る ↗");
+      link.href = v.source_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      body.appendChild(link);
+    }
+
+    if (v.photo && v.photo.src) {
+      var credit = el("p", "vehicle-card__credit");
+      credit.appendChild(document.createTextNode("写真(市販車ベースの参考画像。実際のレース仕様とは外観が異なります): "));
+      var creditLink = el("a", null, v.photo.credit + " (" + v.photo.license + ")");
+      creditLink.href = v.photo.source_url;
+      creditLink.target = "_blank";
+      creditLink.rel = "noopener noreferrer";
+      credit.appendChild(creditLink);
+      credit.appendChild(document.createTextNode("、Wikimedia Commonsより"));
+      body.appendChild(credit);
+    }
+
+    card.appendChild(body);
+    wrap.appendChild(card);
+    return wrap;
+  }
+
   function buildMotorsportsPanel(icon, section) {
     var panel = el("section", "panel panel--full");
     panel.id = "section-motorsports";
@@ -493,8 +573,16 @@
       var s = section.series[key];
       var card = el("div", "series-card series-card--" + key);
       card.appendChild(el("div", "series-card__header", s.label));
-      card.appendChild(buildScheduleBlock(s));
-      card.appendChild(buildRankingBlock(s));
+
+      var toggleBar = buildToggleBar();
+      card.appendChild(toggleBar);
+      addToggleSection(toggleBar, card, "レース日程", buildScheduleBlock(s));
+      addToggleSection(toggleBar, card, "ランキング", buildRankingBlock(s));
+      if (s.vehicle_info) {
+        addToggleSection(toggleBar, card, "車両規定", buildRegulationBlock(s.vehicle_info.regulation));
+        addToggleSection(toggleBar, card, "参戦車両", buildVehicleBlock(s.vehicle_info.vehicle));
+      }
+
       card.appendChild(buildSeriesGroup("トピックス", s.topics));
       card.appendChild(buildSeriesGroup("最新レース結果", s.results));
       card.appendChild(buildSeriesGroup("ランキング関連ニュース", s.standings));
@@ -569,7 +657,7 @@
 
     if (hasSpecs) {
       specWrap = el("div", "nurburgring-row__specs");
-      var specList = el("dl", "nurburgring-row__spec-list");
+      var specList = el("dl", "spec-list");
       entry.specs.forEach(function (spec) {
         specList.appendChild(el("dt", null, CAR_SPEC_LABELS[spec.key] || spec.key));
         specList.appendChild(el("dd", null, spec.value));
