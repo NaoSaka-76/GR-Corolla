@@ -140,8 +140,13 @@ def translate_to_japanese(text: str) -> str | None:
         translated = "".join(chunk[0] for chunk in data[0] if chunk and chunk[0])
         translated = translated.strip()
         return translated or None
-    except Exception:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001
+        global _last_translation_error
+        _last_translation_error = f"{type(exc).__name__}: {exc}"
         return None
+
+
+_last_translation_error: str | None = None
 
 
 def attach_japanese_translations(items: list[dict], limit: int = 400) -> None:
@@ -151,6 +156,7 @@ def attach_japanese_translations(items: list[dict], limit: int = 400) -> None:
     翻訳件数に上限を設けている(通常の運用では上限に達しない想定)。
     """
     count = 0
+    success = 0
     for item in items:
         if count >= limit:
             break
@@ -161,6 +167,8 @@ def attach_japanese_translations(items: list[dict], limit: int = 400) -> None:
         translated = translate_to_japanese(title)
         if translated and translated != title:
             item["title_ja"] = translated
+            success += 1
+    print(f"[translate] attempted={count} success={success} last_error={_last_translation_error}")
 
 
 _VIEW_MULTIPLIERS = {"k": 1_000, "m": 1_000_000, "b": 1_000_000_000}
