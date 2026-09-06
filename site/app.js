@@ -232,16 +232,26 @@
     return pill;
   }
 
+  function buildCopilotSummaryUrl(item) {
+    var lines = ["次のニュース記事(または動画)を日本語で要約してください。"];
+    lines.push("タイトル: " + item.title);
+    if (item.source) lines.push("情報源: " + item.source);
+    if (item.url) lines.push("URL: " + item.url);
+    return "https://copilot.microsoft.com/?q=" + encodeURIComponent(lines.join("\n"));
+  }
+
   function buildItem(item) {
     var sentimentLabel = item.sentiment ? item.sentiment.label : "neutral";
     var recent = isWithin24h(item);
-    var a = el("a", "item item--" + sentimentLabel + (recent ? " item--recent" : ""));
-    a.href = item.url || "#";
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
+    var wrap = el("div", "item item--" + sentimentLabel + (recent ? " item--recent" : ""));
+
+    var link = el("a", "item__link");
+    link.href = item.url || "#";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
     if (!item.url) {
-      a.removeAttribute("href");
-      a.style.cursor = "default";
+      link.removeAttribute("href");
+      link.style.cursor = "default";
     }
 
     if (item.thumbnail) {
@@ -249,7 +259,7 @@
       img.src = item.thumbnail;
       img.alt = "";
       img.loading = "lazy";
-      a.appendChild(img);
+      link.appendChild(img);
     }
 
     var body = el("div", "item__body");
@@ -266,13 +276,23 @@
       meta.appendChild(el("span", "item__metric", item.view_count_text));
     }
     body.appendChild(meta);
-    a.appendChild(body);
+    link.appendChild(body);
+    wrap.appendChild(link);
 
     if (item.title && needsJapaneseTranslation(item.title)) {
       queueTranslation(item.title, body, meta);
     }
 
-    return a;
+    if (item.title && item.url) {
+      var copilotBtn = el("a", "item__copilot-btn", "🤖");
+      copilotBtn.href = buildCopilotSummaryUrl(item);
+      copilotBtn.target = "_blank";
+      copilotBtn.rel = "noopener noreferrer";
+      copilotBtn.title = "Microsoft Copilotでこの記事の要約を試す(別タブで開きます)";
+      wrap.appendChild(copilotBtn);
+    }
+
+    return wrap;
   }
 
   function buildList(items) {
