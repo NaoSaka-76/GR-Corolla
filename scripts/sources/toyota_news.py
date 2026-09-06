@@ -188,8 +188,34 @@ QUERIES = [
 ]
 
 
+# 発信元ドメイン -> 地域タブのキー(フロントエンドのi18n.regionsと対応)。
+# 日本の販売会社ドメインは全てtoyota.jpと同じ"japan"バケットにまとめる。
+# global.toyota(トヨタ自動車グローバル本体)は特定の国に紐づかないため、どのタブにも
+# 割り当てず「グローバル(すべて)」タブでのみ表示する(region未設定のまま)。
+_DOMAIN_TO_REGION: dict[str, str] = {
+    "pressroom.toyota.com": "us",
+    "media.toyota.ca": "canada",
+    "newsroom.toyota.eu": "europe",
+    "pressroom.toyota.com.au": "australia",
+    "toyota.jp": "japan",
+    "toyotacomunica.com.br": "brazil",
+    "toyota.co.za": "south_africa",
+    **{domain: "japan" for domain in _JP_DEALER_SITES},
+}
+
+
+def _tag_region(items: list[dict]) -> list[dict]:
+    for item in items:
+        domain = item.get("source_domain", "")
+        # Google NewsのRSSは同じサイトでも"www."有り無しの両方を返すことがあるため、
+        # 先頭のwww.を落としてから完全一致で照合する。
+        domain = domain[4:] if domain.startswith("www.") else domain
+        item["region"] = _DOMAIN_TO_REGION.get(domain)
+    return items
+
+
 def fetch(limit_per_query: int = 8) -> list[dict]:
     items: list[dict] = []
     for query, hl, gl, ceid in QUERIES:
         items.extend(fetch_google_news_rss(query, hl=hl, gl=gl, ceid=ceid, limit=limit_per_query))
-    return sort_by_recency(dedupe_by_url(items))
+    return _tag_region(sort_by_recency(dedupe_by_url(items)))

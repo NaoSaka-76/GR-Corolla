@@ -64,13 +64,19 @@ def fetch_google_news_rss(query: str, hl: str = "en-US", gl: str = "US", ceid: s
         feed = feedparser.parse(resp.content)
         for entry in feed.entries[:limit]:
             source = ""
-            if hasattr(entry, "source") and hasattr(entry.source, "title"):
-                source = entry.source.title
+            source_url = ""
+            if hasattr(entry, "source"):
+                if hasattr(entry.source, "title"):
+                    source = entry.source.title
+                if hasattr(entry.source, "href"):
+                    # "https://media.toyota.ca" -> "media.toyota.ca"(素のドメインのみ保持)。
+                    source_url = entry.source.href.split("//", 1)[-1].rstrip("/")
             items.append(
                 {
                     "title": entry.get("title", "").strip(),
                     "url": entry.get("link", ""),
                     "source": source or "Google News",
+                    "source_domain": source_url,
                     "published": entry.get("published", ""),
                 }
             )
