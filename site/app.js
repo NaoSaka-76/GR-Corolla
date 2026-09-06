@@ -232,26 +232,16 @@
     return pill;
   }
 
-  function buildCopilotSummaryUrl(item) {
-    var lines = ["次のニュース記事(または動画)を日本語で要約してください。"];
-    lines.push("タイトル: " + item.title);
-    if (item.source) lines.push("情報源: " + item.source);
-    if (item.url) lines.push("URL: " + item.url);
-    return "https://copilot.microsoft.com/?q=" + encodeURIComponent(lines.join("\n"));
-  }
-
   function buildItem(item) {
     var sentimentLabel = item.sentiment ? item.sentiment.label : "neutral";
     var recent = isWithin24h(item);
-    var wrap = el("div", "item item--" + sentimentLabel + (recent ? " item--recent" : ""));
-
-    var link = el("a", "item__link");
-    link.href = item.url || "#";
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
+    var a = el("a", "item item--" + sentimentLabel + (recent ? " item--recent" : ""));
+    a.href = item.url || "#";
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
     if (!item.url) {
-      link.removeAttribute("href");
-      link.style.cursor = "default";
+      a.removeAttribute("href");
+      a.style.cursor = "default";
     }
 
     if (item.thumbnail) {
@@ -259,7 +249,7 @@
       img.src = item.thumbnail;
       img.alt = "";
       img.loading = "lazy";
-      link.appendChild(img);
+      a.appendChild(img);
     }
 
     var body = el("div", "item__body");
@@ -276,23 +266,78 @@
       meta.appendChild(el("span", "item__metric", item.view_count_text));
     }
     body.appendChild(meta);
-    link.appendChild(body);
-    wrap.appendChild(link);
+    a.appendChild(body);
 
     if (item.title && needsJapaneseTranslation(item.title)) {
       queueTranslation(item.title, body, meta);
     }
 
-    if (item.title && item.url) {
-      var copilotBtn = el("a", "item__copilot-btn", "🤖");
-      copilotBtn.href = buildCopilotSummaryUrl(item);
-      copilotBtn.target = "_blank";
-      copilotBtn.rel = "noopener noreferrer";
-      copilotBtn.title = "Microsoft Copilotでこの記事の要約を試す(別タブで開きます)";
-      wrap.appendChild(copilotBtn);
-    }
+    return a;
+  }
 
-    return wrap;
+  /* --- 記事・動画リンクのURLコピー ボタン ---------------------------------
+   * buildList 経由で描画される各リスト項目(記事・YouTube動画・モータース
+   * ポーツ関連ニュース等)の右上に表示。クリックで item.url をクリップ
+   * ボードへコピーする。buildList を通らない導線(オンボード動画リンク等)
+   * には付かない。 */
+  var COPY_ICON_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+  var COPY_DONE_SVG =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<path d="M20 6 9 17l-5-5"/></svg>';
+
+  function copyTextToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "absolute";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  function buildCopyLinkButton(url) {
+    var label = "リンクをコピー";
+    var doneLabel = "コピーしました";
+    var btn = el("button", "item__copy");
+    btn.type = "button";
+    btn.title = label;
+    btn.setAttribute("aria-label", label);
+    btn.innerHTML = COPY_ICON_SVG;
+    var resetTimer = null;
+    btn.addEventListener("click", function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      copyTextToClipboard(url)
+        .then(function () {
+          btn.classList.add("is-done");
+          btn.title = doneLabel;
+          btn.setAttribute("aria-label", doneLabel);
+          btn.innerHTML = COPY_DONE_SVG;
+          if (resetTimer) clearTimeout(resetTimer);
+          resetTimer = setTimeout(function () {
+            btn.classList.remove("is-done");
+            btn.title = label;
+            btn.setAttribute("aria-label", label);
+            btn.innerHTML = COPY_ICON_SVG;
+          }, 1400);
+        })
+        .catch(function () {});
+    });
+    return btn;
   }
 
   function buildList(items) {
@@ -300,6 +345,7 @@
     items.forEach(function (item) {
       var li = el("li");
       li.appendChild(buildItem(item));
+      if (item.url) li.appendChild(buildCopyLinkButton(item.url));
       list.appendChild(li);
     });
     return list;
