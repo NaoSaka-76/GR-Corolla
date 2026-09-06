@@ -55,6 +55,68 @@ combined with a GR Corolla / GRMN Corolla term):
   This remains a representative sample, not the full ~60+ dealer-corporation
   network — genuinely dealer-specific stories outside this set are a known,
   accepted gap (same as documented in the FR-Sports-Car-Watch dashboard).
+
+**Added 2026-09-06 (second pass) — TMNA/TME corporate-domain check + South America /
+China / Thailand / South Africa research** (same standard as above and as the
+sibling FR-Sports-Car-Watch dashboard: every domain below was verified reachable
+and confirmed via a live Google News RSS `site:` probe returning genuine, on-topic,
+dated GR Corolla content before being added):
+
+*TMNA / TME corporate domains — checked, confirmed already covered, nothing added*:
+Toyota Motor North America (TMNA) publishes its own corporate press releases
+(executive changes, annual sales results, manufacturing announcements) directly on
+pressroom.toyota.com under its "Corporate" topic — no distinct `tmna.com`-style
+domain exists; pressroom.toyota.com already IS TMNA's official newsroom. Toyota
+Motor Europe (TME) is the same: its corporate news publishes directly on
+newsroom.toyota.eu's "Corporate" category (newsroom.toyota.eu/corporate-news/) — no
+separate TME-only domain found. Both are already fully covered here — nothing added.
+
+*Brazil (toyotacomunica.com.br, "Toyota Comunica") — ADDED*: GR Corolla is
+confirmed officially sold in Brazil (a limited run brought in by TOYOTA GAZOO Racing
+do Brasil, with subsequent batches/editions and its own dedicated warranty program).
+A direct Google News RSS `site:` probe (pt-BR/BR/BR:pt-419 locale) against
+toyotacomunica.com.br returned many genuine, dated, on-topic articles credited to
+"Toyota Comunica" — e.g. "TOYOTA GAZOO Racing anuncia chegada do GR Corolla ao
+Brasil", "GR Corolla inova com inédita garantia de até 10 anos no segmento de
+esportivos", "Últimas 30 unidades do GR Corolla Launch Edition chegam ao Brasil".
+An earlier-surfaced candidate domain, toyotaimprensa.com.br, does not resolve
+(DNS failure) and was not used. GRMN Corolla and GR Supra are not confirmed sold in
+Brazil, so this domain was added to the GR Corolla queries only.
+
+*South Africa (toyota.co.za) — ADDED*: GR Corolla is confirmed officially sold in
+South Africa (Toyota South Africa Motors / TSAM) — this is the same domain
+researched and rejected for the sibling FR-Sports-Car-Watch dashboard's original
+pass and now added there too, for the same reason: the earlier rejection used a
+generic locale and found only commercial pages, while re-probing with the
+country-correct locale (hl=en-ZA, gl=ZA, ceid=ZA:en) surfaced genuine, dated,
+on-topic content credited to "Toyota South Africa" — e.g. "TOYOTA GR COROLLA GETS
+8-SPEED AUTOMATIC", "Driven: The new GR Corolla", "GR Corolla Takes Centre Stage at
+2026 SA Festival of Motoring". No dedicated media/press subdomain (e.g.
+`media.toyota.co.za`) was found to exist — toyota.co.za is TSAM's only site.
+GRMN Corolla was checked too (`"GRMN Corolla" site:toyota.co.za`) and correctly
+returns zero, confirming no false-positive risk from reusing this domain for both
+name variants.
+
+*Argentina — researched and rejected*: no evidence GR Corolla is officially sold in
+Argentina was found (only GR Supra has a confirmed limited-run Argentina launch, and
+that itself returned no indexed press content when checked for the sibling Supra
+dashboard). Not added.
+
+*China (toyota.com.cn) — researched and rejected*: no official China-market launch
+of GR Corolla was found in either English or Chinese-language search (only
+Malaysia/Taiwan neighboring-market coverage turned up, which are separate,
+non-mainland-China distributors). A direct `site:toyota.com.cn` probe for
+`"GR Corolla"` (zh-CN/CN/CN:zh-Hans locale) returned no on-topic result either.
+Not added — the vehicle does not appear to be officially sold there at all.
+
+*Thailand (toyota.co.th) — researched and rejected*: Toyota Motor Thailand does
+officially sell GR Corolla (confirmed: toyota.co.th/model/grcorolla, currently
+priced, a rare non-JP/US/EU market where it's still listed) and publishes
+ข่าวประชาสัมพันธ์ ("press release") content on its own main site (toyota.co.th/news
+— no separate press subdomain exists). But `site:toyota.co.th` probes for
+`"GR Corolla"` in both Thai and English locale variants returned only generic
+catalogue/model/promotion pages (Corolla Cross, Camry, Hilux, etc.) — no on-topic
+GR Corolla press content indexed. Not added.
 """
 
 from __future__ import annotations
@@ -91,6 +153,18 @@ def _site_filter(domains: list[str]) -> str:
     return "(" + " OR ".join(f"site:{d}" for d in domains) + ")"
 
 
+# 欧州以外の地域の公式販売代理店ニュースルーム(2026-09-06追加、第2弾)。
+# ブラジル(Toyota Comunica)・南アフリカ(TSAM)はいずれも専用メディアサブドメインが
+# 見つからず(ブラジルはtoyotacomunica.com.br自体が報道向けサイト、南アフリカは
+# toyota.co.za本体がそれを兼ねる)。国ごとのロケールを合わせないと0件になる点はEU各国
+# 及びFR-Sports-Car-Watchダッシュボードでの検証と同じ。
+_DISTRIBUTOR_SITES: dict[str, tuple[str, str, str, str]] = {
+    # country_code: (domain, hl, gl, ceid)
+    "BR": ("toyotacomunica.com.br", "pt-BR", "BR", "BR:pt-419"),
+    "ZA": ("toyota.co.za", "en-ZA", "ZA", "ZA:en"),
+}
+
+
 QUERIES = [
     # グローバル/北米/欧州/豪州の公式ニュースルーム(GR Corolla)
     (f'"GR Corolla" {_site_filter(_OFFICIAL_SITES_EN)}', "en-US", "US", "US:en"),
@@ -102,6 +176,15 @@ QUERIES = [
     # 日本の販売会社(GR Garage網中心の代表サンプル)
     (f"GRカローラ {_site_filter(_JP_DEALER_SITES)}", "ja", "JP", "JP:ja"),
     (f"GRMNカローラ {_site_filter(_JP_DEALER_SITES)}", "ja", "JP", "JP:ja"),
+    # ブラジル(Toyota Comunica)・南アフリカ(TSAM) — GR Corolla/GRMN Corolla両方確認
+    *[
+        (f'"GR Corolla" site:{domain}', hl, gl, ceid)
+        for domain, hl, gl, ceid in _DISTRIBUTOR_SITES.values()
+    ],
+    *[
+        (f'"GRMN Corolla" site:{domain}', hl, gl, ceid)
+        for domain, hl, gl, ceid in _DISTRIBUTOR_SITES.values()
+    ],
 ]
 
 
