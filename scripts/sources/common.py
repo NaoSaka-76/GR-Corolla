@@ -8,7 +8,9 @@ Google News RSS・Reddit公開検索・YouTube検索ページの軽量スクレ�
 
 from __future__ import annotations
 
+import random
 import re
+import time
 import urllib.parse
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
@@ -20,11 +22,36 @@ USER_AGENT = "Mozilla/5.0 (compatible; GRCorollaDashboardBot/1.0; +https://githu
 
 REQUEST_TIMEOUT = 15
 
+# 一時的なサーバー側エラー。Google News RSS は混雑時に 429/503 を返すことがあり、
+# 数秒待って再試行すると成功することが多い。
+_TRANSIENT_STATUS = {429, 500, 502, 503, 504}
+_MAX_RETRIES = 3
+_RETRY_BASE_DELAY = 2.0  # 秒(指数バックオフの基準)
+
 
 def _session() -> requests.Session:
     s = requests.Session()
     s.headers.update({"User-Agent": USER_AGENT})
     return s
+
+
+def _get_with_retry(session: requests.Session, url: str) -> requests.Response:
+    """一時的なエラー(429/5xx・接続エラー)を指数バックオフで再試行しながら GET する。"""
+    last_exc: Exception | None = None
+    for attempt in range(_MAX_RETRIES + 1):
+        try:
+            resp = session.get(url, timeout=REQUEST_TIMEOUT)
+            if resp.status_code in _TRANSIENT_STATUS and attempt < _MAX_RETRIES:
+                last_exc = requests.HTTPError(f"{resp.status_code} {resp.reason}", response=resp)
+            else:
+                resp.raise_for_status()
+                return resp
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            last_exc = exc
+            if attempt >= _MAX_RETRIES:
+                raise
+        time.sleep(_RETRY_BASE_DELAY * (2 ** attempt) + random.uniform(0, 1))
+    raise last_exc if last_exc else RuntimeError("request failed")
 
 
 def fetch_google_news_rss(query: str, hl: str = "en-US", gl: str = "US", ceid: str = "US:en", limit: int = 10) -> list[dict]:
@@ -33,8 +60,7 @@ def fetch_google_news_rss(query: str, hl: str = "en-US", gl: str = "US", ceid: s
     url = f"https://news.google.com/rss/search?q={encoded}&hl={hl}&gl={gl}&ceid={ceid}"
     items: list[dict] = []
     try:
-        resp = _session().get(url, timeout=REQUEST_TIMEOUT)
-        resp.raise_for_status()
+        resp = _get_with_retry(_session(), url)
         feed = feedparser.parse(resp.content)
         for entry in feed.entries[:limit]:
             source = ""
@@ -49,7 +75,7 @@ def fetch_google_news_rss(query: str, hl: str = "en-US", gl: str = "US", ceid: s
                 }
             )
     except Exception as exc:  # noqa: BLE001
-        items.append({"title": f"[取得エラー] {query}", "url": "", "source": "error", "published": str(exc)})
+        print(f"[warn] Google News RSS 取得失敗（再試行後）: {query!r} -> {exc}")
     return items
 
 
@@ -59,8 +85,7 @@ def fetch_reddit_search(query: str, sort: str = "hot", t: str = "week", limit: i
     url = f"https://www.reddit.com/search.json?q={encoded}&sort={sort}&t={t}&limit={limit}"
     items: list[dict] = []
     try:
-        resp = _session().get(url, timeout=REQUEST_TIMEOUT)
-        resp.raise_for_status()
+        resp = _get_with_retry(_session(), url)
         data = resp.json()
         for child in data.get("data", {}).get("children", []):
             d = child.get("data", {})
@@ -78,7 +103,7 @@ def fetch_reddit_search(query: str, sort: str = "hot", t: str = "week", limit: i
                 }
             )
     except Exception as exc:  # noqa: BLE001
-        items.append({"title": f"[取得エラー] {query}", "url": "", "source": "error", "published": str(exc)})
+        print(f"[warn] Reddit 検索取得失敗（再試行後）: {query!r} -> {exc}")
     return items
 
 
